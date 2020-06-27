@@ -1,4 +1,3 @@
-```
 # Popular Movies Project
 
 ## Project Overview
@@ -10,4 +9,3 @@ Building a layout and populating its fields from data received as JSON. Using Re
 
 ## What to do to run this project?
 Obtain API key from https://www.themoviedb.org/ and paste it in project resources>string as "API_KEY" value.
-```
