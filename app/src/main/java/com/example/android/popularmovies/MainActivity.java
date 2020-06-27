@@ -1,6 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MovieAdapter.OnListItemClickListener {
 
     private MovieAdapter adapter;
     private RecyclerView recyclerView;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new MovieAdapter();
+        adapter = new MovieAdapter(this);
 
         recyclerView.setAdapter(adapter);
 
@@ -92,6 +93,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         // Not needed
+    }
+
+    @Override
+    public void onListItemClick(Movie movie) {
+        Log.d("MainActivity", "onListItemClick");
+
+        Intent intent = new Intent(this, DetailsActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString("title", movie.getTitle());
+        extras.putString("originalTitle", movie.getOriginalTitle());
+        extras.putString("overview", movie.getOverview());
+        extras.putString("poster", movie.getMoviePosterUri().toString());
+        extras.putString("userRating", movie.getUserRating());
+        extras.putString("releaseDate", movie.getReleaseDate());
+
+        intent.putExtras(extras);
+
+        startActivity(intent);
     }
 
     class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {

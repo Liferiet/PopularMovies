@@ -1,6 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,10 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private int mNumberItems;
     private List<Movie> mMovieList;
+    private OnListItemClickListener mOnListItemClickListener;
 
-    public MovieAdapter() {
+    public MovieAdapter(OnListItemClickListener listener) {
+        mOnListItemClickListener = listener;
         this.mNumberItems = 0;
     }
 
@@ -30,6 +33,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         View view = inflater.inflate(layoutIdForItem, parent, shouldAttachToParentImmediately);
         return new MovieViewHolder(view);
+    }
+
+    interface OnListItemClickListener {
+        void onListItemClick(Movie movie);
     }
 
     @Override
@@ -49,7 +56,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder {
+    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView titleTextView;
         private TextView starsMovieTextView;
@@ -61,6 +68,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             titleTextView = itemView.findViewById(R.id.title_movie_tv);
             starsMovieTextView = itemView.findViewById(R.id.stars_movie_tv);
             movieImageView = itemView.findViewById(R.id.image_movie_iv);
+
+            itemView.setOnClickListener(this);
         }
 
         // TODO 2. bind method ?
@@ -72,7 +81,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             Picasso.get().load(movie.getMoviePosterUri()).into(movieImageView);
         }
 
-
-
+        @Override
+        public void onClick(View view) {
+            mOnListItemClickListener.onListItemClick(mMovieList.get(getAdapterPosition()));
+        }
     }
 }
