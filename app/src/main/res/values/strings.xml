@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+
+    <string name="image_view_description">Movie poster</string>
+
+    <!--  Main menu options   -->
+    <string name="sort_by_menu_label">Sort by:</string>
+    <string name="top_rated_sort">rating</string>
+    <string name="popular_sort">popularity</string>
+    <string name="actionbar_spinner">ActionBar Spinner</string>
+
+    <!-- Data not available in JSONObject  -->
+    <string name="no_data">None</string>
+
+    <!--  API_KEY to movie database   ... until I know how to store it better-->
+    <string name="API_KEY"></string>
+</resources>
