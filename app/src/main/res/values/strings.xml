@@ -9,6 +9,11 @@
     <string name="popular_sort">popularity</string>
     <string name="actionbar_spinner">ActionBar Spinner</string>
 
+    <!--  Details Activity labels  -->
+    <string name="original_title_label">Original Title</string>
+    <string name="rating_label">Rating</string>
+    <string name="release_date_label">Rating</string>
+
     <!-- Data not available in JSONObject  -->
     <string name="no_data">None</string>
 
