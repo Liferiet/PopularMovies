@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -104,7 +105,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         extras.putString("title", movie.getTitle());
         extras.putString("originalTitle", movie.getOriginalTitle());
         extras.putString("overview", movie.getOverview());
-        extras.putString("poster", movie.getMoviePosterUri().toString());
+        Uri uri = movie.getMoviePosterUri();
+        extras.putString("poster", uri.toString());
         extras.putString("userRating", movie.getUserRating());
         extras.putString("releaseDate", movie.getReleaseDate());
 

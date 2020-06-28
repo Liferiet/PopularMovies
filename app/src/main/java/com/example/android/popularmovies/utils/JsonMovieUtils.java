@@ -15,7 +15,7 @@ import java.util.List;
 
 public class JsonMovieUtils {
 
-    private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
+    private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w185";
 
     public static List<Movie> getMovieListFromJson (Context context, String data) throws JSONException {
         JSONObject fullJSONObject = new JSONObject(data);
