@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.utils.JsonMovieUtils;
@@ -37,10 +39,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ProgressBar mLoadingProgressBar;
     private TextView mErrorMessageTextView;
 
+    private boolean mFirstSpinnerUse;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFirstSpinnerUse = true;
 
         mLoadingProgressBar = findViewById(R.id.loading_data_pb);
         mErrorMessageTextView = findViewById(R.id.error_message_tv);
@@ -55,7 +61,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mRecyclerView.setAdapter(mAdapter);
 
-
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
+            loadData(NetworkUtils.POPULAR);
+        } else {
+            ArrayList<Movie> list = savedInstanceState.getParcelableArrayList("movies");
+            mAdapter.setMovieData(list);
+        }
     }
 
     @Override
@@ -63,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.sort_by_spinner);
         Spinner spinner = (Spinner) item.getActionView();
-        Log.v("MainActivity", "znaleziony spinner: " + spinner);
         initializeSpinner(spinner);
         return true;
     }
@@ -97,11 +107,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if (mFirstSpinnerUse) {
+            mFirstSpinnerUse = false;
+            return;
+        }
         if (adapterView.getItemAtPosition(i).toString().equals("popularity")) {
             loadData(NetworkUtils.POPULAR);
         }
@@ -117,8 +130,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onListItemClick(Movie movie) {
-        Log.d("MainActivity", "onListItemClick");
-
         Intent intent = new Intent(this, DetailsActivity.class);
         Bundle extras = new Bundle();
         extras.putString("title", movie.getTitle());
@@ -136,10 +147,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        ArrayList<Movie> list =  mAdapter.getMovieData();
+        outState.putParcelableArrayList("movies", list);
         super.onSaveInstanceState(outState);
     }
 
-    class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
+    class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
 
         private Context context;
 
@@ -154,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         @Override
-        protected List<Movie> doInBackground(String... strings) {
+        protected ArrayList<Movie> doInBackground(String... strings) {
             if (strings.length == 0) return null;
 
             String sortBy = strings[0];
@@ -167,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             try {
                 String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(url);
 
-                List<Movie> moviesList = JsonMovieUtils.getMovieListFromJson(context, jsonMovieResponse);
+                ArrayList<Movie> moviesList = JsonMovieUtils.getMovieListFromJson(context, jsonMovieResponse);
 
                 return moviesList;
 
@@ -178,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         @Override
-        protected void onPostExecute(List<Movie> movies) {
+        protected void onPostExecute(ArrayList<Movie> movies) {
             mLoadingProgressBar.setVisibility(View.INVISIBLE);
 
             if (movies != null) {
@@ -190,7 +203,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 showErrorMessage();
             }
         }
-
-
     }
 }

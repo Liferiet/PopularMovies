@@ -11,20 +11,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class JsonMovieUtils {
 
     private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w185";
 
-    public static List<Movie> getMovieListFromJson (Context context, String data) throws JSONException {
+    public static ArrayList<Movie> getMovieListFromJson (Context context, String data) throws JSONException {
         JSONObject fullJSONObject = new JSONObject(data);
 
         JSONArray results = fullJSONObject.optJSONArray("results");
 
         if (results == null) return null;
 
-        List<Movie> movieList = new ArrayList<>(results.length());
+        ArrayList<Movie> movieList = new ArrayList<>(results.length());
         for (int i = 0; i < results.length(); i++) {
             JSONObject movieJson = results.getJSONObject(i);
             Movie movie = new Movie();

@@ -12,11 +12,11 @@ import android.widget.TextView;
 import com.example.android.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private int mNumberItems;
-    private List<Movie> mMovieList;
+    private ArrayList<Movie> mMovieList;
     private OnListItemClickListener mOnListItemClickListener;
 
     public MovieAdapter(OnListItemClickListener listener) {
@@ -50,10 +50,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return mNumberItems;
     }
 
-    public void setMovieData(List<Movie> movieList) {
+    public void setMovieData(ArrayList<Movie> movieList) {
         mMovieList = movieList;
         mNumberItems = mMovieList.size();
         notifyDataSetChanged();
+    }
+
+    public ArrayList<Movie> getMovieData() {
+        return mMovieList;
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
