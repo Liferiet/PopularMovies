@@ -1,9 +1,6 @@
 package com.example.android.popularmovies.utils;
 
 import android.net.Uri;
-import android.security.keystore.UserNotAuthenticatedException;
-import android.util.Log;
-import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.io.InputStream;

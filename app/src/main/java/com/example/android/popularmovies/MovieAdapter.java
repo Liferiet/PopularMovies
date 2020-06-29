@@ -1,7 +1,6 @@
 package com.example.android.popularmovies;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +40,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(MovieAdapter.MovieViewHolder holder, int position) {
-        // TODO 2. bind data, example ViewHolder.bind
         holder.bind(position);
     }
 
@@ -74,11 +72,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             itemView.setOnClickListener(this);
         }
 
-        // TODO 2. bind method ?
         void bind(int position) {
             Movie movie = mMovieList.get(position);
             titleTextView.setText(movie.getTitle());
-            //starsMovieTextView.setText(movie.getUserRating());
 
             Picasso.get().load(movie.getMoviePosterUri()).into(movieImageView);
         }

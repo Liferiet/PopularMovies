@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setOnItemSelectedListener(this);
     }
 
+    // Listener method for spinner options
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         if (mFirstSpinnerUse) {
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Not needed
     }
 
+    // Listener method for RecyclerView's adapter
     @Override
     public void onListItemClick(Movie movie) {
         Intent intent = new Intent(this, DetailsActivity.class);
@@ -166,9 +168,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             try {
                 String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(url);
 
-                ArrayList<Movie> moviesList = JsonMovieUtils.getMovieListFromJson(context, jsonMovieResponse);
-
-                return moviesList;
+                return JsonMovieUtils.getMovieListFromJson(context, jsonMovieResponse);
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
