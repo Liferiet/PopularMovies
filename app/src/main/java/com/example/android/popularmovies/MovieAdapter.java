@@ -59,14 +59,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView titleTextView;
-        private TextView starsMovieTextView;
         private ImageView movieImageView;
 
         public MovieViewHolder(View itemView) {
             super(itemView);
 
             titleTextView = itemView.findViewById(R.id.title_movie_tv);
-            starsMovieTextView = itemView.findViewById(R.id.stars_movie_tv);
             movieImageView = itemView.findViewById(R.id.image_movie_iv);
 
             itemView.setOnClickListener(this);
@@ -76,7 +74,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         void bind(int position) {
             Movie movie = mMovieList.get(position);
             titleTextView.setText(movie.getTitle());
-            starsMovieTextView.setText(movie.getUserRating());
+            //starsMovieTextView.setText(movie.getUserRating());
 
             Picasso.get().load(movie.getMoviePosterUri()).into(movieImageView);
         }

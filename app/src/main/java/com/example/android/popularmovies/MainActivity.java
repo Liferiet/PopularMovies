@@ -14,9 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.utils.JsonMovieUtils;
@@ -31,31 +31,30 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MovieAdapter.OnListItemClickListener {
 
-    private MovieAdapter adapter;
-    private RecyclerView recyclerView;
-    private TextView tempData;
+    private MovieAdapter mAdapter;
+    private RecyclerView mRecyclerView;
 
-    private Spinner mSpinner;
+    private ProgressBar mLoadingProgressBar;
+    private TextView mErrorMessageTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.recyclerview_movies);
+        mLoadingProgressBar = findViewById(R.id.loading_data_pb);
+        mErrorMessageTextView = findViewById(R.id.error_message_tv);
+
+        mRecyclerView = findViewById(R.id.recyclerview_movies);
 
         GridLayoutManager manager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setHasFixedSize(true);
 
-        adapter = new MovieAdapter(this);
+        mAdapter = new MovieAdapter(this);
 
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(mAdapter);
 
-
-
-        tempData = findViewById(R.id.temp_data_tv);
-        new FetchMoviesTask(this).execute(NetworkUtils.POPULAR);
 
     }
 
@@ -73,14 +72,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }*/
+    public void loadData(String sortBy) {
+        showResults();
+        new FetchMoviesTask(this).execute(sortBy);
+    }
+
+    public void showResults() {
+        mErrorMessageTextView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public void showErrorMessage() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mErrorMessageTextView.setVisibility(View.VISIBLE);
+
+    }
 
     public void initializeSpinner(Spinner spinner) {
         final List<String> options = new ArrayList<>();
         options.add(getString(R.string.popular_sort));
         options.add(getString(R.string.top_rated_sort));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, options);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -88,7 +102,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(this, "Item selected: " + adapterView.getItemAtPosition(i).toString(), Toast.LENGTH_SHORT).show();
+        if (adapterView.getItemAtPosition(i).toString().equals("popularity")) {
+            loadData(NetworkUtils.POPULAR);
+        }
+        if (adapterView.getItemAtPosition(i).toString().equals("rating")) {
+            loadData(NetworkUtils.TOP_RATED);
+        }
     }
 
     @Override
@@ -115,6 +134,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         startActivity(intent);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
 
         private Context context;
@@ -125,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected void onPreExecute() {
+            mLoadingProgressBar.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -154,8 +179,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
-            adapter.setMovieData(movies);
-            Log.d("Async task", "List size: " + movies.size());
+            mLoadingProgressBar.setVisibility(View.INVISIBLE);
+
+            if (movies != null) {
+                showResults();
+                mAdapter.setMovieData(movies);
+            }
+
+            if (movies == null) {
+                showErrorMessage();
+            }
         }
 
 

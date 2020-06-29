@@ -15,6 +15,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private final String TAG = DetailsActivity.class.getSimpleName();
 
+    private TextView mTitleTextView;
     private TextView mOriginalTitleTextView;
     private TextView mRatingTextView;
     private TextView mReleaseDateTextView;
@@ -28,8 +29,6 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        Log.d(TAG, "onCreate");
-
         Intent intentThatStartedActivity = getIntent();
         Bundle extras = intentThatStartedActivity.getExtras();
 
@@ -38,6 +37,9 @@ public class DetailsActivity extends AppCompatActivity {
             return;
         }
 
+        setTitle(getString(R.string.detail_activity_title));
+
+        mTitleTextView = findViewById(R.id.details_title_tv);
         mOriginalTitleTextView = findViewById(R.id.details_original_title_tv);
         mRatingTextView = findViewById(R.id.details_rating_tv);
         mReleaseDateTextView = findViewById(R.id.details_release_date_tv);
@@ -46,17 +48,17 @@ public class DetailsActivity extends AppCompatActivity {
 
         mMovie = new Movie();
 
-        setTitle(extras.getString("title"));
-
+        mTitleTextView.setText(extras.getString("title"));
         mOriginalTitleTextView.setText(extras.getString("originalTitle"));
-        mRatingTextView.setText(extras.getString("userRating"));
+
+        String rating = extras.getString("userRating") + "/10.0";
+        mRatingTextView.setText(rating);
+
         mReleaseDateTextView.setText(extras.getString("releaseDate"));
         mOverviewTextView.setText(extras.getString("overview"));
 
         Uri posterUri = Uri.parse(extras.getString("poster"));
         Picasso.get().load(posterUri).into(mPosterImageView);
-
-
 
     }
 }
