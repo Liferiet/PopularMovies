@@ -2,14 +2,11 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.utils.JsonMovieUtils;
@@ -78,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
-/*    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }*/
     public void loadData(String sortBy) {
         showResults();
         new FetchMoviesTask(this).execute(sortBy);
@@ -115,6 +107,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             mFirstSpinnerUse = false;
             return;
         }
+        mAdapter = new MovieAdapter(this);
+        mRecyclerView.setAdapter(mAdapter);
+
         if (adapterView.getItemAtPosition(i).toString().equals("popularity")) {
             loadData(NetworkUtils.POPULAR);
         }
@@ -131,16 +126,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onListItemClick(Movie movie) {
         Intent intent = new Intent(this, DetailsActivity.class);
-        Bundle extras = new Bundle();
-        extras.putString("title", movie.getTitle());
-        extras.putString("originalTitle", movie.getOriginalTitle());
-        extras.putString("overview", movie.getOverview());
-        Uri uri = movie.getMoviePosterUri();
-        extras.putString("poster", uri.toString());
-        extras.putString("userRating", movie.getUserRating());
-        extras.putString("releaseDate", movie.getReleaseDate());
-
-        intent.putExtras(extras);
+        intent.putExtra("movie", movie);
 
         startActivity(intent);
     }

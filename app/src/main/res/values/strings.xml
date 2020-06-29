@@ -1,5 +1,7 @@
 <resources>
+    <!--  Activity title  -->
     <string name="app_name">Popular Movies</string>
+    <string name="detail_activity_title">Movie Details</string>
 
     <string name="image_view_description">Movie poster</string>
 
@@ -9,14 +11,18 @@
     <string name="popular_sort">popularity</string>
     <string name="actionbar_spinner">ActionBar Spinner</string>
 
+    <!--  Loading data error  -->
+    <string name="error_message">Ups.. Something gone wrong</string>
+
     <!--  Details Activity labels  -->
-    <string name="original_title_label">Original Title</string>
+    <string name="original_title_label">Original title</string>
     <string name="rating_label">Rating</string>
-    <string name="release_date_label">Rating</string>
+    <string name="release_date_label">Release date</string>
 
     <!-- Data not available in JSONObject  -->
     <string name="no_data">None</string>
 
     <!--  API_KEY to movie database   ... until I know how to store it better-->
     <string name="API_KEY"></string>
+
 </resources>

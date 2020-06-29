@@ -25,42 +25,6 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-    protected Movie(Parcel in) {
-        title = in.readString();
-        originalTitle = in.readString();
-        moviePosterUri = in.readParcelable(Uri.class.getClassLoader());
-        overview = in.readString();
-        userRating = in.readString();
-        releaseDate = in.readString();
-    }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(title);
-        parcel.writeString(originalTitle);
-        parcel.writeValue(moviePosterUri);
-        parcel.writeString(overview);
-        parcel.writeString(userRating);
-        parcel.writeString(releaseDate);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -109,5 +73,39 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
+    protected Movie(Parcel in) {
+        title = in.readString();
+        originalTitle = in.readString();
+        moviePosterUri = (Uri) in.readValue(Uri.class.getClassLoader());
+        overview = in.readString();
+        userRating = in.readString();
+        releaseDate = in.readString();
+    }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(originalTitle);
+        dest.writeValue(moviePosterUri);
+        dest.writeString(overview);
+        dest.writeString(userRating);
+        dest.writeString(releaseDate);
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }

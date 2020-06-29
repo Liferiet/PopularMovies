@@ -16,7 +16,6 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    // TODO 3. do przeniesienia do jakis resourcersow czy cos
     private final static String BASE_URL ="http://api.themoviedb.org/3";
     private final static String API_KEY_PARAM = "api_key";
 

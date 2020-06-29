@@ -30,12 +30,13 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         Intent intentThatStartedActivity = getIntent();
-        Bundle extras = intentThatStartedActivity.getExtras();
 
-        if (extras == null) {
+        if (!intentThatStartedActivity.hasExtra("movie")) {
             finish();
             return;
         }
+
+        mMovie = intentThatStartedActivity.getParcelableExtra("movie");
 
         setTitle(getString(R.string.detail_activity_title));
 
@@ -46,18 +47,16 @@ public class DetailsActivity extends AppCompatActivity {
         mOverviewTextView = findViewById(R.id.details_overview_tv);
         mPosterImageView = findViewById(R.id.details_poster_iv);
 
-        mMovie = new Movie();
+        mTitleTextView.setText(mMovie.getTitle());
+        mOriginalTitleTextView.setText(mMovie.getOriginalTitle());
 
-        mTitleTextView.setText(extras.getString("title"));
-        mOriginalTitleTextView.setText(extras.getString("originalTitle"));
-
-        String rating = extras.getString("userRating") + "/10.0";
+        String rating = mMovie.getUserRating() + "/10.0";
         mRatingTextView.setText(rating);
 
-        mReleaseDateTextView.setText(extras.getString("releaseDate"));
-        mOverviewTextView.setText(extras.getString("overview"));
+        mReleaseDateTextView.setText(mMovie.getReleaseDate());
+        mOverviewTextView.setText(mMovie.getOverview());
 
-        Uri posterUri = Uri.parse(extras.getString("poster"));
+        Uri posterUri = mMovie.getMoviePosterUri();
         Picasso.get().load(posterUri).into(mPosterImageView);
 
     }
