@@ -1,6 +1,9 @@
 package com.example.android.popularmovies.utils;
 
+import android.content.Context;
 import android.net.Uri;
+
+import com.example.android.popularmovies.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,30 +18,40 @@ public class NetworkUtils {
 
     private final static String BASE_URL ="http://api.themoviedb.org/3";
     private final static String API_KEY_PARAM = "api_key";
+    private final static String MOVIE = "/movie";
 
-    public final static String TOP_RATED = "/movie/top_rated";
-    public final static String POPULAR = "/movie/popular";
+    public final static String TOP_RATED = "/top_rated";
+    public final static String POPULAR = "/popular";
+    public final static String VIDEOS = "/videos";
+    public final static String REVIEWS = "/reviews";
 
-    public static URL generateUrlSortByTopRated(String API_KEY) {
-        return generateUrl(TOP_RATED, API_KEY);
+
+    public static URL generateUrlSortByTopRated(Context context) {
+        String path = MOVIE + TOP_RATED;
+        return generateUrl(context, path);
     }
 
-    public static URL generateUrlSortByPopular(String API_KEY) {
-        return generateUrl(POPULAR, API_KEY);
+    public static URL generateUrlSortByPopular(Context context) {
+        String path = MOVIE + POPULAR;
+        return generateUrl(context, path);
     }
 
-    private static URL generateUrl (String requestSortBy, String API_KEY) {
-        String sortBy = "";
-        if (requestSortBy.equals(TOP_RATED)) {
-            sortBy = TOP_RATED;
-        } else if (requestSortBy.equals(POPULAR)) {
-            sortBy = POPULAR;
-        } else {
-            return null;
-        }
-        String baseUrl = BASE_URL + sortBy;
+    public static URL generateUrlVideosForMovie(Context context, int movieId) {
+        String path = MOVIE + "/" + movieId + VIDEOS;
+        return generateUrl(context, path);
+    }
+
+    public static URL generateUrlReviewsForMovie(Context context, int movieId) {
+        String path = MOVIE + "/" + movieId + REVIEWS;
+        return generateUrl(context, path);
+    }
+
+    private static URL generateUrl (Context context, String path) {
+        String api = context.getResources().getString(R.string.API_KEY);
+
+        String baseUrl = BASE_URL + path;
         Uri uri = Uri.parse(baseUrl).buildUpon()
-                .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                .appendQueryParameter(API_KEY_PARAM, api)
                 .build();
         URL url = null;
         try {
