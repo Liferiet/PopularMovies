@@ -16,7 +16,7 @@ public class JsonMovieUtils {
 
     private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w185";
 
-    public static ArrayList<Movie> getMovieListFromJson (Context context, String data) throws JSONException {
+    public static ArrayList<Movie> getMovieListFromJson (String data, String noDataFallback) throws JSONException {
         JSONObject fullJSONObject = new JSONObject(data);
 
         JSONArray results = fullJSONObject.optJSONArray("results");
@@ -27,11 +27,10 @@ public class JsonMovieUtils {
         for (int i = 0; i < results.length(); i++) {
             JSONObject movieJson = results.getJSONObject(i);
             Movie movie = new Movie();
-            String fallback = context.getResources().getString(R.string.no_data);
 
-            movie.setTitle(movieJson.optString("title", fallback));
+            movie.setTitle(movieJson.optString("title", noDataFallback));
 
-            movie.setOriginalTitle(movieJson.optString("original_title", fallback));
+            movie.setOriginalTitle(movieJson.optString("original_title", noDataFallback));
 
             Uri movieImageUri = null;
             String movieImageString = movieJson.optString("poster_path");
@@ -40,11 +39,11 @@ public class JsonMovieUtils {
             }
             movie.setMoviePosterUri(movieImageUri);
 
-            movie.setOverview(movieJson.optString("overview", fallback));
+            movie.setOverview(movieJson.optString("overview", noDataFallback));
 
-            movie.setReleaseDate(movieJson.optString("release_date", fallback));
+            movie.setReleaseDate(movieJson.optString("release_date", noDataFallback));
 
-            movie.setUserRating(movieJson.optString("vote_average", fallback));
+            movie.setUserRating(movieJson.optString("vote_average", noDataFallback));
 
             movieList.add(movie);
         }

@@ -26,32 +26,31 @@ public class NetworkUtils {
     public final static String REVIEWS = "/reviews";
 
 
-    public static URL generateUrlSortByTopRated(Context context) {
+    public static URL generateUrlSortByTopRated(String apiKey) {
         String path = MOVIE + TOP_RATED;
-        return generateUrl(context, path);
+        return generateUrl(apiKey, path);
     }
 
-    public static URL generateUrlSortByPopular(Context context) {
+    public static URL generateUrlSortByPopular(String apiKey) {
         String path = MOVIE + POPULAR;
-        return generateUrl(context, path);
+        return generateUrl(apiKey, path);
     }
 
-    public static URL generateUrlVideosForMovie(Context context, int movieId) {
+    public static URL generateUrlVideosForMovie(String apiKey, int movieId) {
         String path = MOVIE + "/" + movieId + VIDEOS;
-        return generateUrl(context, path);
+        return generateUrl(apiKey, path);
     }
 
-    public static URL generateUrlReviewsForMovie(Context context, int movieId) {
+    public static URL generateUrlReviewsForMovie(String apiKey, int movieId) {
         String path = MOVIE + "/" + movieId + REVIEWS;
-        return generateUrl(context, path);
+        return generateUrl(apiKey, path);
     }
 
-    private static URL generateUrl (Context context, String path) {
-        String api = context.getResources().getString(R.string.API_KEY);
+    private static URL generateUrl (String apiKey, String path) {
 
         String baseUrl = BASE_URL + path;
         Uri uri = Uri.parse(baseUrl).buildUpon()
-                .appendQueryParameter(API_KEY_PARAM, api)
+                .appendQueryParameter(API_KEY_PARAM, apiKey)
                 .build();
         URL url = null;
         try {

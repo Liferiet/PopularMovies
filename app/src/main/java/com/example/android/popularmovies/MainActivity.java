@@ -1,12 +1,18 @@
 package com.example.android.popularmovies;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +33,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MovieAdapter.OnListItemClickListener {
+public class MainActivity extends AppCompatActivity implements
+        AdapterView.OnItemSelectedListener,
+        MovieAdapter.OnListItemClickListener,
+        LoaderManager.LoaderCallbacks<ArrayList<Movie>> {
+
+    private final int LOADER_IDENTIFIER = 409;
+    private final String PATH_EXTRA = "path-extra";
 
     private MovieAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -63,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ArrayList<Movie> list = savedInstanceState.getParcelableArrayList("movies");
             mAdapter.setMovieData(list);
         }
+
+        getSupportLoaderManager().initLoader(LOADER_IDENTIFIER, null, null);
     }
 
     @Override
@@ -76,7 +90,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void loadData(String sortBy) {
         showResults();
-        new FetchMoviesTask(this).execute(sortBy);
+        Bundle bundle = new Bundle();
+        bundle.putString(PATH_EXTRA, sortBy);
+        getSupportLoaderManager().restartLoader(LOADER_IDENTIFIER, bundle, this);
     }
 
     public void showResults() {
@@ -140,54 +156,70 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onSaveInstanceState(outState);
     }
 
-    class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
+    @SuppressLint("StaticFieldLeak")
+    @Override
+    public Loader<ArrayList<Movie>> onCreateLoader(int id, final Bundle args) {
+        return new AsyncTaskLoader<ArrayList<Movie>>(this) {
 
-        private Context context;
+            ArrayList<Movie> cache;
 
-        public FetchMoviesTask(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mLoadingProgressBar.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected ArrayList<Movie> doInBackground(String... strings) {
-            if (strings.length == 0) return null;
-
-            String sortBy = strings[0];
-            URL url = null;
-            String apiKey = context.getResources().getString(R.string.API_KEY);
-            if (sortBy.equals(NetworkUtils.TOP_RATED)) url = NetworkUtils.generateUrlSortByTopRated(apiKey);
-            else if (sortBy.equals(NetworkUtils.POPULAR)) url = NetworkUtils.generateUrlSortByPopular(apiKey);
-            else return null;
-
-            try {
-                String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(url);
-
-                return JsonMovieUtils.getMovieListFromJson(context, jsonMovieResponse);
-
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Movie> movies) {
-            mLoadingProgressBar.setVisibility(View.INVISIBLE);
-
-            if (movies != null) {
-                showResults();
-                mAdapter.setMovieData(movies);
+            @Override
+            protected void onStartLoading() {
+                if (cache != null) deliverResult(cache);
+                else {
+                    mLoadingProgressBar.setVisibility(View.VISIBLE);
+                    forceLoad();
+                }
             }
 
-            if (movies == null) {
-                showErrorMessage();
+
+            @Override
+            public ArrayList<Movie> loadInBackground() {
+                String path = args.getString(PATH_EXTRA);
+                if (path == null || TextUtils.isEmpty(path)) return null;
+
+                String apiKey = MainActivity.this.getString(R.string.API_KEY);
+
+                URL url;
+                if (path.equals(NetworkUtils.TOP_RATED)) url = NetworkUtils.generateUrlSortByTopRated(apiKey);
+                else if (path.equals(NetworkUtils.POPULAR)) url = NetworkUtils.generateUrlSortByPopular(apiKey);
+                else throw new IllegalArgumentException();
+
+                try {
+                    String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(url);
+
+                    String noDataString = MainActivity.this.getString(R.string.no_data);
+                    return JsonMovieUtils.getMovieListFromJson(jsonMovieResponse, noDataString);
+
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
+
+            @Override
+            public void deliverResult(ArrayList<Movie> data) {
+                cache = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
+        mLoadingProgressBar.setVisibility(View.INVISIBLE);
+
+        if (data != null) {
+            showResults();
+            mAdapter.setMovieData(data);
+        } else {
+            showErrorMessage();
         }
     }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
+
+    }
+
 }
