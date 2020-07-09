@@ -1,17 +1,14 @@
 package com.example.android.popularmovies;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.AsyncTask;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -19,10 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
+import com.example.android.popularmovies.databinding.ActivityMainBinding;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.utils.JsonMovieUtils;
 import com.example.android.popularmovies.utils.NetworkUtils;
@@ -42,11 +38,9 @@ public class MainActivity extends AppCompatActivity implements
     private final int LOADER_IDENTIFIER = 409;
     private final String PATH_EXTRA = "path-extra";
 
-    private MovieAdapter mAdapter;
-    private RecyclerView mRecyclerView;
+    private ActivityMainBinding mBinding;
 
-    private ProgressBar mLoadingProgressBar;
-    private TextView mErrorMessageTextView;
+    private MovieAdapter mAdapter;
 
     private boolean mFirstSpinnerUse;
 
@@ -57,18 +51,15 @@ public class MainActivity extends AppCompatActivity implements
 
         mFirstSpinnerUse = true;
 
-        mLoadingProgressBar = findViewById(R.id.loading_data_pb);
-        mErrorMessageTextView = findViewById(R.id.error_message_tv);
-
-        mRecyclerView = findViewById(R.id.recyclerview_movies);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         GridLayoutManager manager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setHasFixedSize(true);
+        mBinding.recyclerviewMovies.setLayoutManager(manager);
+        mBinding.recyclerviewMovies.setHasFixedSize(true);
 
         mAdapter = new MovieAdapter(this);
 
-        mRecyclerView.setAdapter(mAdapter);
+        mBinding.recyclerviewMovies.setAdapter(mAdapter);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
             Log.d("Main onCreate", "savedInstance is null so load new data");
@@ -98,13 +89,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void showResults() {
-        mErrorMessageTextView.setVisibility(View.INVISIBLE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        mBinding.errorMessageTv.setVisibility(View.INVISIBLE);
+        mBinding.recyclerviewMovies.setVisibility(View.VISIBLE);
     }
 
     public void showErrorMessage() {
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        mErrorMessageTextView.setVisibility(View.VISIBLE);
+        mBinding.recyclerviewMovies.setVisibility(View.INVISIBLE);
+        mBinding.errorMessageTv.setVisibility(View.VISIBLE);
 
     }
 
@@ -127,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements
             return;
         }
         mAdapter = new MovieAdapter(this);
-        mRecyclerView.setAdapter(mAdapter);
+        mBinding.recyclerviewMovies.setAdapter(mAdapter);
 
         Log.d("main spinner", "item selected - load new data");
         if (adapterView.getItemAtPosition(i).toString().equals("popularity")) {
@@ -170,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements
             protected void onStartLoading() {
                 if (cache != null) deliverResult(cache);
                 else {
-                    mLoadingProgressBar.setVisibility(View.VISIBLE);
+                    mBinding.loadingDataPb.setVisibility(View.VISIBLE);
                     forceLoad();
                 }
             }
@@ -212,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
-        mLoadingProgressBar.setVisibility(View.INVISIBLE);
+        mBinding.loadingDataPb.setVisibility(View.INVISIBLE);
 
         if (data != null) {
             showResults();

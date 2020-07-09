@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_movies"
+    xmlns:tools="http://schemas.android.com/tools">
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000"/>
+        tools:context=".MainActivity">
 
-    <ProgressBar
-        android:id="@+id/loading_data_pb"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_gravity="center"
-        android:visibility="invisible" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_movies"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000"/>
 
-    <TextView
-        android:id="@+id/error_message_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:text="@string/error_message" />
+        <ProgressBar
+            android:id="@+id/loading_data_pb"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/error_message_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="@string/error_message" />
+
+    </FrameLayout>
+</layout>
