@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,13 +71,14 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(mAdapter);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
+            Log.d("Main onCreate", "savedInstance is null so load new data");
             loadData(NetworkUtils.POPULAR);
         } else {
+            Log.d("Main onCreate", "load data from savedInstance");
             ArrayList<Movie> list = savedInstanceState.getParcelableArrayList("movies");
             mAdapter.setMovieData(list);
         }
 
-        getSupportLoaderManager().initLoader(LOADER_IDENTIFIER, null, null);
     }
 
     @Override
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements
         mAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
+        Log.d("main spinner", "item selected - load new data");
         if (adapterView.getItemAtPosition(i).toString().equals("popularity")) {
             loadData(NetworkUtils.POPULAR);
         }
@@ -185,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements
                 else if (path.equals(NetworkUtils.POPULAR)) url = NetworkUtils.generateUrlSortByPopular(apiKey);
                 else throw new IllegalArgumentException();
 
+                Log.d("Loader Main", "fetching data from internet");
                 try {
                     String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(url);
 
@@ -201,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements
             public void deliverResult(ArrayList<Movie> data) {
                 cache = data;
                 super.deliverResult(data);
+                Log.d("Loader Main", "Cache stored");
             }
         };
     }
