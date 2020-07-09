@@ -76,7 +76,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             Movie movie = mMovieList.get(position);
             titleTextView.setText(movie.getTitle());
 
-            Picasso.get().load(movie.getMoviePosterUri()).into(movieImageView);
+            Picasso.get().load(movie.getMoviePosterUri())
+                    .placeholder(R.drawable.placeholder)
+                    .into(movieImageView);
         }
 
         @Override
