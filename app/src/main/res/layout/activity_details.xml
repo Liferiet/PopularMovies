@@ -55,64 +55,22 @@
                         android:contentDescription="@string/image_view_description"/>
 
                 </LinearLayout>
-                <LinearLayout
+                <include
+                    layout="@layout/detail_movie_data"
+                    android:id="@+id/detail_movie_data"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/original_title_label"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:id="@+id/details_original_title_tv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/rating_label"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/details_rating_tv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/release_date_label"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/details_release_date_tv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp" />
-
-                </LinearLayout>
+                    android:layout_margin="8dp"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <include
+                layout="@layout/detail_movie_overview"
+                android:id="@+id/detail_movie_overview"
                 android:layout_height="0dp"
+                android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_margin="8dp">
-
-                <TextView
-                    android:id="@+id/details_overview_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                android:layout_margin="8dp"/>
         </LinearLayout>
     </ScrollView>
 </layout>

@@ -4,25 +4,39 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class Movie implements Parcelable {
 
+    private int id;
     private String title;
     private String originalTitle;
     private Uri moviePosterUri;
     private String overview;
     private String userRating;
     private String releaseDate;
+    private ArrayList<Uri> trailers;
+    private ArrayList<Review> reviews;
 
     public Movie() {
     }
 
-    public Movie(String title, String originalTitle, Uri moviePosterUri, String overview, String userRating, String releaseDate) {
+    public Movie(int id, String title, String originalTitle, Uri moviePosterUri, String overview, String userRating, String releaseDate) {
+        this.id = id;
         this.title = title;
         this.originalTitle = originalTitle;
         this.moviePosterUri = moviePosterUri;
         this.overview = overview;
         this.userRating = userRating;
         this.releaseDate = releaseDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -74,6 +88,7 @@ public class Movie implements Parcelable {
     }
 
     protected Movie(Parcel in) {
+        id = in.readInt();
         title = in.readString();
         originalTitle = in.readString();
         moviePosterUri = (Uri) in.readValue(Uri.class.getClassLoader());
@@ -89,6 +104,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(originalTitle);
         dest.writeValue(moviePosterUri);
@@ -108,4 +124,20 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public ArrayList<Uri> getTrailers() {
+        return trailers;
+    }
+
+    public void setTrailers(ArrayList<Uri> trailers) {
+        this.trailers = trailers;
+    }
+
+    public ArrayList<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(ArrayList<Review> reviews) {
+        this.reviews = reviews;
+    }
 }

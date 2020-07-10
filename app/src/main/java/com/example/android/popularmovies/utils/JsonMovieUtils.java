@@ -2,6 +2,7 @@ package com.example.android.popularmovies.utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.model.Movie;
@@ -28,6 +29,10 @@ public class JsonMovieUtils {
             JSONObject movieJson = results.getJSONObject(i);
             Movie movie = new Movie();
 
+            int id = movieJson.optInt("id", -1);
+            Log.d("Json getMovieList", "movie id: " + id);
+            movie.setId(id);
+
             movie.setTitle(movieJson.optString("title", noDataFallback));
 
             movie.setOriginalTitle(movieJson.optString("original_title", noDataFallback));
@@ -48,5 +53,11 @@ public class JsonMovieUtils {
             movieList.add(movie);
         }
         return movieList;
+    }
+
+    public static ArrayList<Uri> getTrailersFromJson (String data) throws JSONException {
+        JSONObject fullJsonObject = new JSONObject(data);
+        System.out.println(data);
+        return null;
     }
 }
