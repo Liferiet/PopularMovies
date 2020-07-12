@@ -15,7 +15,7 @@ public class Movie implements Parcelable {
     private String overview;
     private String userRating;
     private String releaseDate;
-    private ArrayList<Uri> trailers;
+    private ArrayList<Trailer> trailers;
     private ArrayList<Review> reviews;
 
     public Movie() {
@@ -125,11 +125,11 @@ public class Movie implements Parcelable {
         }
     };
 
-    public ArrayList<Uri> getTrailers() {
+    public ArrayList<Trailer> getTrailers() {
         return trailers;
     }
 
-    public void setTrailers(ArrayList<Uri> trailers) {
+    public void setTrailers(ArrayList<Trailer> trailers) {
         this.trailers = trailers;
     }
 
