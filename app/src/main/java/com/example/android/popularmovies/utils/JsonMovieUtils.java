@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
 
 import org.json.JSONArray;
@@ -88,7 +89,28 @@ public class JsonMovieUtils {
 
             trailersList.add(trailer);
         }
-        System.out.println("Trailer list in JsonUtils: " + trailersList);
         return trailersList;
+    }
+
+    public static ArrayList<Review> getReviewFromJson (String data) throws JSONException {
+        JSONObject fullJSONObject = new JSONObject(data);
+
+            JSONArray results = fullJSONObject.optJSONArray("results");
+
+            if (results == null) return null;
+
+            ArrayList<Review> reviewsList = new ArrayList<>(results.length());
+
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject reviewJSON = results.getJSONObject(i);
+
+                String author = reviewJSON.getString("author");
+                String content = reviewJSON.getString("content");
+
+                Review review = new Review(author, content);
+
+                reviewsList.add(review);
+        }
+            return reviewsList;
     }
 }

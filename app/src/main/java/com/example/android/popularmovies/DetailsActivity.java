@@ -13,10 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.databinding.ActivityDetailsBinding;
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
 import com.example.android.popularmovies.utils.JsonMovieUtils;
 import com.example.android.popularmovies.utils.NetworkUtils;
@@ -77,6 +77,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         ArrayList<Trailer> trailers = mMovie.getTrailers();
         LayoutInflater inflater = LayoutInflater.from(this);
 
+        if (trailers.isEmpty()) {
+            mBinding.noTrailers.setVisibility(View.VISIBLE);
+        }
+
         for (int i = 0; i < trailers.size(); i++) {
             View v = inflater.inflate(R.layout.trailer_item, null);
 
@@ -87,6 +91,32 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             v.setOnClickListener(this);
 
             mBinding.trailersLinearWrapper.addView(v);
+        }
+    }
+
+    private void loadUIWithReviews() {
+        ArrayList<Review> reviews = mMovie.getReviews();
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        if (reviews.isEmpty()) {
+            mBinding.noReviews.setVisibility(View.VISIBLE);
+        }
+
+        for (int i = 0; i < reviews.size(); i++) {
+            View v = inflater.inflate(R.layout.review_item, null);
+
+            String author = reviews.get(i).getAuthor();
+            String content = reviews.get(i).getContent();
+
+            System.out.println("Author: " + author + " content: " + content);
+            ((TextView) v.findViewById(R.id.review_author_tv)).setText(author);
+            ((TextView) v.findViewById(R.id.review_content_tv)).setText(content);
+
+            if (i == reviews.size() - 1) {
+                v.findViewById(R.id.divider).setVisibility(View.INVISIBLE);
+            }
+
+            mBinding.reviewsLinearWrapper.addView(v);
         }
     }
 
@@ -119,13 +149,12 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
                 Log.d("Loader Details", "fetching data from internet");
                 try {
-                    String noDataString = DetailsActivity.this.getString(R.string.no_data);
-
                     String jsonTrailersResponse = NetworkUtils.getResponseFromHttpUrl(urlTrailers);
                     String jsonReviewsResponse = NetworkUtils.getResponseFromHttpUrl(urlReviews);
 
                     mMovie.setTrailers(JsonMovieUtils.getTrailersFromJson(jsonTrailersResponse));
-                    System.out.println("Trailers list in loader details: " + mMovie.getTrailers());
+                    mMovie.setReviews(JsonMovieUtils.getReviewFromJson(jsonReviewsResponse));
+
                     return mMovie;
 
                 } catch (IOException | JSONException e) {
@@ -146,6 +175,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public void onLoadFinished(Loader loader, Object data) {
         loadUIWithTrailers();
+        loadUIWithReviews();
     }
 
     @Override
