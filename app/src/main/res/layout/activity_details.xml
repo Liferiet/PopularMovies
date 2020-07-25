@@ -15,7 +15,7 @@
             android:orientation="vertical"
             tools:context=".DetailsActivity">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -70,7 +70,7 @@
                     app:layout_constraintVertical_bias="0.0"
                     tools:srcCompat="@drawable/placeholder" />
 
-                <android.support.constraint.Barrier
+                <androidx.constraintlayout.widget.Barrier
                     android:id="@+id/barrier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                     app:layout_constraintTop_toTopOf="@+id/details_poster_iv"
                     app:layout_constraintVertical_bias="0.0" />
 
-                <android.support.constraint.Guideline
+                <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/reviews_linear_wrapper" />
 
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
