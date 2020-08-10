@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:fillViewport="true"
             android:orientation="vertical"
-            tools:context=".DetailsActivity">
+            tools:context=".ui.DetailsActivity">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -78,6 +78,24 @@
                     app:constraint_referenced_ids="details_poster_iv,details_title_tv"
                     tools:layout_editor_absoluteY="325dp" />
 
+                <ToggleButton
+                    android:id="@+id/add_to_favourite_button"
+                    android:layout_width="0dp"
+                    android:minHeight="42dp"
+                    android:maxWidth="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:drawableLeft="@drawable/favourite_toggle_selector"
+                    android:textOff="@string/add_to_favourites_button"
+                    android:textOn="@string/remove_from_favourites_button"
+                    app:layout_constraintStart_toStartOf="@+id/guideline2"
+                    app:layout_constraintTop_toTopOf="@+id/details_poster_iv"
+                    android:onClick="clickFavouriteButton"/>
+
                 <include
                     android:id="@+id/detail_movie_data"
                     layout="@layout/detail_movie_data"
@@ -85,14 +103,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/detail_movie_overview"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline2"
-                    app:layout_constraintTop_toTopOf="@+id/details_poster_iv"
+                    app:layout_constraintTop_toBottomOf="@+id/add_to_favourite_button"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <androidx.constraintlayout.widget.Guideline

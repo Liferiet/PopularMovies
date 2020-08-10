@@ -6,12 +6,9 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class Movie implements Parcelable {
+public class Movie extends MovieModel implements Parcelable {
 
-    private int id;
-    private String title;
     private String originalTitle;
-    private Uri moviePosterUri;
     private String overview;
     private String userRating;
     private String releaseDate;
@@ -22,29 +19,11 @@ public class Movie implements Parcelable {
     }
 
     public Movie(int id, String title, String originalTitle, Uri moviePosterUri, String overview, String userRating, String releaseDate) {
-        this.id = id;
-        this.title = title;
+        super(id, title, moviePosterUri);
         this.originalTitle = originalTitle;
-        this.moviePosterUri = moviePosterUri;
         this.overview = overview;
         this.userRating = userRating;
         this.releaseDate = releaseDate;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getOriginalTitle() {
@@ -53,14 +32,6 @@ public class Movie implements Parcelable {
 
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
-    }
-
-    public Uri getMoviePosterUri() {
-        return moviePosterUri;
-    }
-
-    public void setMoviePosterUri(Uri moviePosterUri) {
-        this.moviePosterUri = moviePosterUri;
     }
 
     public String getOverview() {
@@ -88,10 +59,11 @@ public class Movie implements Parcelable {
     }
 
     protected Movie(Parcel in) {
-        id = in.readInt();
-        title = in.readString();
+        super();
+        super.setId(in.readInt());
+        super.setTitle(in.readString());
         originalTitle = in.readString();
-        moviePosterUri = (Uri) in.readValue(Uri.class.getClassLoader());
+        super.setMoviePosterUri( (Uri) in.readValue(Uri.class.getClassLoader()) );
         overview = in.readString();
         userRating = in.readString();
         releaseDate = in.readString();
@@ -104,10 +76,10 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(title);
+        dest.writeInt(super.getId());
+        dest.writeString(super.getTitle());
         dest.writeString(originalTitle);
-        dest.writeValue(moviePosterUri);
+        dest.writeValue(super.getMoviePosterUri());
         dest.writeString(overview);
         dest.writeString(userRating);
         dest.writeString(releaseDate);

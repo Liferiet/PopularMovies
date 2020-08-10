@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:fillViewport="true"
             android:orientation="vertical"
-            tools:context=".DetailsActivity">
+            tools:context=".ui.DetailsActivity">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -60,6 +60,21 @@
 
                 </ImageView>
 
+                <ToggleButton
+                    android:id="@+id/add_to_favourite_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/favourite_toggle_selector"
+                    android:minWidth="176dp"
+                    android:minHeight="42dp"
+                    android:textOff="@string/add_to_favourites_button"
+                    android:textOn="@string/remove_from_favourites_button"
+                    app:layout_constraintEnd_toStartOf="@+id/detail_movie_overview"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@id/details_poster_iv"
+                    app:layout_constraintTop_toTopOf="@+id/details_poster_iv"
+                    android:onClick="clickFavouriteButton" />
+
                 <include
                     android:id="@+id/detail_movie_data"
                     layout="@layout/detail_movie_data"
@@ -69,7 +84,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/detail_movie_overview"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/details_poster_iv"
-                    app:layout_constraintTop_toTopOf="@+id/details_poster_iv" />
+                    app:layout_constraintTop_toBottomOf="@+id/add_to_favourite_button" />
+
 
                 <include
                     android:id="@+id/detail_movie_overview"
@@ -80,7 +96,7 @@
                     android:layout_marginRight="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/detail_movie_data"
-                    app:layout_constraintTop_toTopOf="@+id/detail_movie_data" />
+                    app:layout_constraintTop_toTopOf="@+id/add_to_favourite_button" />
 
 
                 <androidx.constraintlayout.widget.Barrier

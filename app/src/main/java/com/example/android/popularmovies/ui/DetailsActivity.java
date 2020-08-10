@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.databinding.ActivityDetailsBinding;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.Review;
@@ -34,8 +36,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private final String TAG = DetailsActivity.class.getSimpleName();
     private final int LOADER_ID = 2431;
 
-    Movie mMovie;
-    ActivityDetailsBinding mBinding;
+    private Movie mMovie;
+    private ActivityDetailsBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +192,15 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        }
+    }
+
+    public void clickFavouriteButton(View v) {
+        boolean checked = mBinding.addToFavouriteButton.isChecked();
+        if (checked) {
+            Toast.makeText(this, "checked", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "unchecked", Toast.LENGTH_SHORT).show();
         }
     }
 }

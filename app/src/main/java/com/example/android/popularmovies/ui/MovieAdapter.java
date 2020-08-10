@@ -1,21 +1,24 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui;
 
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.databinding.ListItemGridMovieBinding;
-import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.model.MovieModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private int mNumberItems;
-    private ArrayList<Movie> mMovieList;
+    private ArrayList<MovieModel> mMovieList;
     private OnListItemClickListener mOnListItemClickListener;
 
     public MovieAdapter(OnListItemClickListener listener) {
@@ -36,7 +39,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     interface OnListItemClickListener {
-        void onListItemClick(Movie movie);
+        void onListItemClick(MovieModel movie);
     }
 
     @Override
@@ -49,13 +52,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return mNumberItems;
     }
 
-    public void setMovieData(ArrayList<Movie> movieList) {
+    public void setMovieData(@NonNull ArrayList<MovieModel> movieList) {
         mMovieList = movieList;
         mNumberItems = mMovieList.size();
         notifyDataSetChanged();
     }
 
-    public ArrayList<Movie> getMovieData() {
+    public ArrayList<MovieModel> getMovieData() {
         return mMovieList;
     }
 
@@ -70,7 +73,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
 
         void bind(int position) {
-            Movie movie = mMovieList.get(position);
+            MovieModel movie = mMovieList.get(position);
             binding.titleMovieTv.setText(movie.getTitle());
 
             Picasso.get().load(movie.getMoviePosterUri())
