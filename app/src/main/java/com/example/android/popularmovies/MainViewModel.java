@@ -29,7 +29,6 @@ public class MainViewModel extends ViewModel {
 
     private String mApiKey;
 
-
     public MainViewModel(AppDatabase database, String apiKey) {
 
         Log.d(TAG, "Preparing viewModel");
@@ -44,6 +43,7 @@ public class MainViewModel extends ViewModel {
         mMovies.addSource(favouritesFromDatabase,
                 movieModels -> mMovies.setValue(new ArrayList<>(movieModels)));
 
+        loadPopular();
     }
 
     public LiveData<List<MovieModel>> getCurrentMovies() {

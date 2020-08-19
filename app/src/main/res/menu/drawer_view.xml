@@ -3,21 +3,20 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_load_favourites"
-            android:icon="@drawable/ic_favourite"
-            android:title="Favourites" />
-        <item
-            android:id="@+id/nav_test"
-            android:icon="@drawable/ic_favourite_pink"
-            android:title="Test add to db"/>
-        <item
             android:id="@+id/nav_load_popular"
             android:icon="@drawable/ic_favourite_pink"
-            android:title="Load popular"/>
+            android:title="Popular movies"
+            android:checked="true"/>
         <item
             android:id="@+id/nav_load_top_rated"
             android:icon="@drawable/ic_favourite_pink"
-            android:title="Load top rated"/>
+            android:title="Top rated movies"/>
+        <item
+            android:id="@+id/nav_load_favourites"
+            android:icon="@drawable/ic_favourite"
+            android:title="Favourites" />
+
+
     </group>
 
 <!--    <item android:title="Sub items">
