@@ -4,8 +4,15 @@ import android.net.Uri;
 import android.os.Parcelable;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
+import com.example.android.popularmovies.database.UriConverter;
+
+@Entity
+@TypeConverters({UriConverter.class})
 public abstract class MovieModel implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
@@ -17,6 +24,7 @@ public abstract class MovieModel implements Parcelable {
     public MovieModel() {
     }
 
+    @Ignore
     public MovieModel(int id, String title, Uri moviePosterUri) {
         this.id = id;
         this.title = title;

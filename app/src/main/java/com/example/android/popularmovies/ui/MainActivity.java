@@ -2,8 +2,10 @@ package com.example.android.popularmovies.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,15 +13,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.android.popularmovies.MainViewModel;
+import com.example.android.popularmovies.MainViewModelFactory;
 import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.database.AppDatabase;
+import com.example.android.popularmovies.database.FavouriteEntry;
 import com.example.android.popularmovies.databinding.ActivityMainBinding;
 import com.example.android.popularmovies.model.MovieModel;
 import com.example.android.popularmovies.utils.JsonMovieUtils;
@@ -34,15 +43,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
-        AdapterView.OnItemSelectedListener,
-        MovieAdapter.OnListItemClickListener,
-        LoaderManager.LoaderCallbacks<ArrayList<MovieModel>> {
+        /*AdapterView.OnItemSelectedListener,*/
+        MovieAdapter.OnListItemClickListener
+        /*LoaderManager.LoaderCallbacks<ArrayList<MovieModel>>*/ {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private final int LOADER_IDENTIFIER = 409;
     private final String PATH_EXTRA = "path-extra";
 
     private ActivityMainBinding mBinding;
+    private MainViewModel mViewModel;
 
     private MovieAdapter mAdapter;
     private Bundle savedInstance;
@@ -55,17 +65,19 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         //Stetho.initializeWithDefaults(this);
+        MainViewModelFactory factory = new MainViewModelFactory(
+                AppDatabase.getInstance(getApplicationContext()), getString(R.string.API_KEY));
+        mViewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
 
         mFirstSpinnerUse = true;
         savedInstance = savedInstanceState;
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        if (mBinding.navView != null) {
-            setupDrawerContent(mBinding.navView);
-        }
+        setupDrawerContent(mBinding.navView);
 
-        GridLayoutManager manager = new GridLayoutManager(this, 2);
+        GridLayoutManager manager = new GridLayoutManager(this,
+                GridDecorator.calculateNoOfColumns(this));
         mBinding.recyclerviewMovies.setLayoutManager(manager);
         mBinding.recyclerviewMovies.setHasFixedSize(true);
 
@@ -73,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mBinding.recyclerviewMovies.setAdapter(mAdapter);
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
+/*        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
             Log.d("Main onCreate", "savedInstance is null so load new data");
             loadData(NetworkUtils.POPULAR);
             //currentSpinnerOption = getString(R.string.popular_sort);
@@ -82,25 +94,31 @@ public class MainActivity extends AppCompatActivity implements
             ArrayList<MovieModel> list = savedInstanceState.getParcelableArrayList("movies");
             mAdapter.setMovieData(list);
             //currentSpinnerOption = savedInstanceState.getString("spinner_option");
-        }
+        }*/
+
+        mViewModel.getCurrentMovies().observe(this, movies -> {
+            mBinding.loadingDataPb.setVisibility(View.INVISIBLE);
+            mAdapter.setMovieData((ArrayList<MovieModel>)movies);
+            showResults();
+        });
 
     }
 
-    @Override
+/*    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.sort_by_spinner);
         Spinner spinner = (Spinner) item.getActionView();
         initializeSpinner(spinner);
         return true;
-    }
+    }*/
 
-    public void loadData(String sortBy) {
+/*    public void loadData(String sortBy) {
         showResults();
         Bundle bundle = new Bundle();
         bundle.putString(PATH_EXTRA, sortBy);
         getSupportLoaderManager().restartLoader(LOADER_IDENTIFIER, bundle, this);
-    }
+    }*/
 
     public void showResults() {
         mBinding.errorMessageTv.setVisibility(View.INVISIBLE);
@@ -110,10 +128,9 @@ public class MainActivity extends AppCompatActivity implements
     public void showErrorMessage() {
         mBinding.recyclerviewMovies.setVisibility(View.INVISIBLE);
         mBinding.errorMessageTv.setVisibility(View.VISIBLE);
-
     }
 
-    public void initializeSpinner(Spinner spinner) {
+/*    public void initializeSpinner(Spinner spinner) {
         mSpinner = spinner;
         final List<String> options = new ArrayList<>();
         options.add(getString(R.string.popular_sort));
@@ -128,10 +145,10 @@ public class MainActivity extends AppCompatActivity implements
         if (savedInstance != null) {
             spinner.setSelection(savedInstance.getInt("spinner", 0));
         }
-    }
+    }*/
 
     // Listener method for spinner options
-    @Override
+/*    @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         if (mFirstSpinnerUse) {
             mFirstSpinnerUse = false;
@@ -150,38 +167,51 @@ public class MainActivity extends AppCompatActivity implements
             loadData(NetworkUtils.TOP_RATED);
             //currentSpinnerOption = getString(R.string.top_rated_sort);
         }
-    }
-
-/*    private void setupViewModel() {
-        MainViewModelFactory factory = new MainViewModelFactory(AppDatabase.getInstance(getApplicationContext()));
-        MainViewModel viewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
-        viewModel.getFavourites().observe(this, new Observer<List<FavouriteEntry>>() {
-            @Override
-            public void onChanged(List<FavouriteEntry> favouriteEntries) {
-                Log.d(TAG, "Updating list of favourites from LiveData in ViewModel");
-                ArrayList<FavouriteEntry> fav = (ArrayList<FavouriteEntry>) favouriteEntries;
-                ArrayList<MovieModel> list = new ArrayList<MovieModel>(fav);
-                mAdapter.setMovieData(list);
-            }
-        });
     }*/
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setChecked(true);
-                        mBinding.drawerLayout.closeDrawers();
+                menuItem -> {
+                    if (menuItem.isChecked()){
                         return true;
                     }
+
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_load_favourites:
+                            loadFavourites();
+                            break;
+                        case R.id.nav_load_popular:
+                            loadPopular();
+                            break;
+                        case R.id.nav_load_top_rated:
+                            loadTopRated();
+                            break;
+                    }
+
+                    mBinding.drawerLayout.closeDrawers();
+                    return true;
                 });
     }
 
-    @Override
+    private void loadFavourites() {
+        mBinding.loadingDataPb.setVisibility(View.VISIBLE);
+        mViewModel.loadFavourites();
+    }
+
+    private void loadPopular() {
+        mBinding.loadingDataPb.setVisibility(View.VISIBLE);
+        mViewModel.loadPopular();
+    }
+
+    private void loadTopRated() {
+        mBinding.loadingDataPb.setVisibility(View.VISIBLE);
+        mViewModel.loadTopRated();
+    }
+
+/*    @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         // Not needed
-    }
+    }*/
 
     // Listener method for RecyclerView's adapter
     @Override
@@ -192,14 +222,14 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    @Override
+/*    @Override
     protected void onSaveInstanceState(Bundle outState) {
         ArrayList<MovieModel> list =  mAdapter.getMovieData();
 
-/*        if ((getString(R.string.favourite_sort).equals(currentSpinnerOption)) &&
+*//*        if ((getString(R.string.favourite_sort).equals(currentSpinnerOption)) &&
         list == null) {
             list = new ArrayList<>();
-        }*/
+        }*//*
         if (list != null) outState.putParcelableArrayList("movies", list);
         if (mSpinner != null) {
             outState.putInt("spinner", mSpinner.getSelectedItemPosition());
@@ -207,8 +237,9 @@ public class MainActivity extends AppCompatActivity implements
 
         //outState.putString("spinner_option", currentSpinnerOption);
         super.onSaveInstanceState(outState);
-    }
+    }*/
 
+/*
     @SuppressLint("StaticFieldLeak")
     @Override
     public Loader<ArrayList<MovieModel>> onCreateLoader(int id, final Bundle args) {
@@ -276,5 +307,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onLoaderReset(Loader<ArrayList<MovieModel>> loader) {
 
     }
+*/
 
 }
