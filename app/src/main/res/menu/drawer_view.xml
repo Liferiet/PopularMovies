@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_load_favourites"
+            android:icon="@drawable/ic_favourite"
+            android:title="Favourites" />
+        <item
+            android:id="@+id/nav_test"
+            android:icon="@drawable/ic_favourite_pink"
+            android:title="Test add to db"/>
+        <item
+            android:id="@+id/nav_load_popular"
+            android:icon="@drawable/ic_favourite_pink"
+            android:title="Load popular"/>
+        <item
+            android:id="@+id/nav_load_top_rated"
+            android:icon="@drawable/ic_favourite_pink"
+            android:title="Load top rated"/>
+    </group>
+
+<!--    <item android:title="Sub items">
+        <menu>
+            <item
+                android:icon="@drawable/ic_dashboard"
+                android:title="Sub item 1" />
+            <item
+                android:icon="@drawable/ic_forum"
+                android:title="Sub item 2" />
+        </menu>
+    </item>-->
+
+</menu>
