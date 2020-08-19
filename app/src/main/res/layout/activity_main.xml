@@ -1,39 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <androidx.drawerlayout.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/drawer_layout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:fitsSystemWindows="true">
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.MainActivity">
 
+            <include
+                android:id="@+id/toolbar_include"
+                layout="@layout/main_toolbar"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerview_movies"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_movies"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#000"/>
+                android:layout_height="0dp"
+                android:background="#000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar_include" />
 
             <ProgressBar
                 android:id="@+id/loading_data_pb"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_gravity="center"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar_include" />
 
             <TextView
                 android:id="@+id/error_message_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/error_message"
                 android:visibility="invisible"
-                android:text="@string/error_message" />
+                app:layout_constraintTop_toBottomOf="@+id/toolbar_include" />
 
-        </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"

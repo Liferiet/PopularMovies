@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements
         mViewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setSupportActionBar(mBinding.toolbarInclude.mainToolbar);
 
         mBinding.loadingDataPb.setVisibility(View.VISIBLE);
 
@@ -85,14 +86,11 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-/*    @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem item = menu.findItem(R.id.sort_by_spinner);
-        Spinner spinner = (Spinner) item.getActionView();
-        initializeSpinner(spinner);
         return true;
-    }*/
+    }
 
 
     public void showResults() {
