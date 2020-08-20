@@ -15,7 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -64,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setSupportActionBar(mBinding.toolbarInclude.mainToolbar);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_menu);
+
         mBinding.loadingDataPb.setVisibility(View.VISIBLE);
 
         setupDrawerContent(mBinding.navView);
@@ -80,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mViewModel.getCurrentMovies().observe(this, movies -> {
             mBinding.loadingDataPb.setVisibility(View.INVISIBLE);
-            mAdapter.setMovieData((ArrayList<MovieModel>)movies);
+            mAdapter.setMovieData((ArrayList<MovieModel>) movies);
             showResults();
         });
 
@@ -92,6 +99,18 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case android.R.id.home:
+                mBinding.drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public void showResults() {
         mBinding.errorMessageTv.setVisibility(View.INVISIBLE);
@@ -103,14 +122,26 @@ public class MainActivity extends AppCompatActivity implements
         mBinding.errorMessageTv.setVisibility(View.VISIBLE);
     }
 
+    // Listener method for RecyclerView's adapter
+    @Override
+    public void onListItemClick(MovieModel movie) {
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("movie", movie);
+
+        startActivity(intent);
+    }
 
     private void setupDrawerContent(NavigationView navigationView) {
 
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
-                    if (menuItem.isChecked()){
+                    if (menuItem.isChecked()) {
+                        mBinding.drawerLayout.closeDrawer(GravityCompat.START);
                         return true;
                     }
+
+                    mBinding.loadingDataPb.setVisibility(View.VISIBLE);
+                    //mBinding.recyclerviewMovies.setAdapter(null);
 
                     switch (menuItem.getItemId()) {
                         case R.id.nav_load_favourites:
@@ -130,27 +161,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void loadFavourites() {
-        mBinding.loadingDataPb.setVisibility(View.VISIBLE);
         mViewModel.loadFavourites();
     }
 
     private void loadPopular() {
-        mBinding.loadingDataPb.setVisibility(View.VISIBLE);
         mViewModel.loadPopular();
     }
 
     private void loadTopRated() {
-        mBinding.loadingDataPb.setVisibility(View.VISIBLE);
         mViewModel.loadTopRated();
-    }
-
-    // Listener method for RecyclerView's adapter
-    @Override
-    public void onListItemClick(MovieModel movie) {
-        Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("movie", movie);
-
-        startActivity(intent);
     }
 
 }
