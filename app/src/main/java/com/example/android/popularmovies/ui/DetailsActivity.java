@@ -58,9 +58,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
         mViewModel.getTrailers().observe(this, this::loadUIWithTrailers);
         mViewModel.getReviews().observe(this, this::loadUIWithReviews);
-
-        mViewModel.loadReviewsForMovie();
-        mViewModel.loadTrailersForMovie();
     }
 
     private void populateUiWithMovieData(Movie movie) {

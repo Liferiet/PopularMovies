@@ -30,11 +30,13 @@ public class DetailsViewModel extends ViewModel {
         Log.d(TAG, "Preparing main viewModel");
         mRepository = DetailsRepository.getInstance();
         mApiKey = apiKey;
+        mMovie = movie;
 
         mReviews = new MutableLiveData<>();
         mTrailers = new MutableLiveData<>();
 
-        mMovie = movie;
+        loadReviewsForMovie();
+        loadTrailersForMovie();
     }
 
     public Movie getMovie() {
@@ -49,11 +51,11 @@ public class DetailsViewModel extends ViewModel {
         return mReviews;
     }
 
-    public void loadReviewsForMovie() {
+    private void loadReviewsForMovie() {
         mRepository.loadReviews(mReviews, mApiKey, mMovie);
     }
 
-    public void loadTrailersForMovie() {
+    private void loadTrailersForMovie() {
         mRepository.loadTrailers(mTrailers, mApiKey, mMovie);
     }
 }
