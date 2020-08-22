@@ -67,8 +67,6 @@ public class JsonMovieUtils {
         for (int i = 0; i < results.length(); i++) {
             JSONObject trailerJSON = results.getJSONObject(i);
 
-            System.out.println(trailerJSON.toString());
-
             String site = trailerJSON.optString("site");
 
             if (!site.equals("YouTube")) continue;

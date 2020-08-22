@@ -58,10 +58,10 @@ public class Movie extends MovieModel implements Parcelable {
 
     protected Movie(Parcel in) {
         super();
-        super.setId(in.readInt());
-        super.setTitle(in.readString());
+        setId(in.readInt());
+        setTitle(in.readString());
         originalTitle = in.readString();
-        super.setMoviePosterUri( (Uri) in.readValue(Uri.class.getClassLoader()) );
+        setMoviePosterUri((Uri) in.readValue(Uri.class.getClassLoader()));
         overview = in.readString();
         userRating = in.readString();
         releaseDate = in.readString();
@@ -74,10 +74,10 @@ public class Movie extends MovieModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(super.getId());
-        dest.writeString(super.getTitle());
+        dest.writeInt(getId());
+        dest.writeString(getTitle());
         dest.writeString(originalTitle);
-        dest.writeValue(super.getMoviePosterUri());
+        dest.writeValue(getMoviePosterUri());
         dest.writeString(overview);
         dest.writeString(userRating);
         dest.writeString(releaseDate);

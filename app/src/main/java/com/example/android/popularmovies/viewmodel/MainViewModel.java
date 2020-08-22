@@ -12,16 +12,15 @@ import com.example.android.popularmovies.database.AppDatabase;
 import com.example.android.popularmovies.database.FavouriteEntry;
 import com.example.android.popularmovies.model.MovieModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainViewModel extends ViewModel {
 
     private static final String TAG = MainViewModel.class.getSimpleName();
 
-    private MediatorLiveData<List<MovieModel>> mMovies;
+    private MediatorLiveData<List<? extends MovieModel>> mMovies;
     private MutableLiveData<List<MovieModel>> mMoviesFromInternet;
-    private LiveData<List<FavouriteEntry>> favouritesFromDatabase;
+    private MutableLiveData<List<FavouriteEntry>> favouritesFromDatabase;
 
     private MainRepository mRepository;
 
@@ -39,17 +38,17 @@ public class MainViewModel extends ViewModel {
         mMovies.addSource(mMoviesFromInternet,
                 movieModels -> mMovies.setValue(movieModels));
         mMovies.addSource(favouritesFromDatabase,
-                movieModels -> mMovies.setValue(new ArrayList<>(movieModels)));
+                movieModels -> mMovies.setValue(movieModels));
 
         loadPopular();
     }
 
-    public LiveData<List<MovieModel>> getCurrentMovies() {
+    public LiveData<List<? extends MovieModel>> getCurrentMovies() {
         return mMovies;
     }
 
     public void loadFavourites() {
-        favouritesFromDatabase = mRepository.loadAllFavourites();
+        mRepository.loadAllFavourites(favouritesFromDatabase);
     }
 
     public void loadPopular() {

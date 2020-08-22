@@ -1,11 +1,14 @@
 package com.example.android.popularmovies;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.android.popularmovies.database.AppDatabase;
 import com.example.android.popularmovies.database.FavouriteEntry;
 import com.example.android.popularmovies.model.MovieModel;
+import com.example.android.popularmovies.ui.MainActivity;
 import com.example.android.popularmovies.utils.JsonMovieUtils;
 import com.example.android.popularmovies.utils.NetworkUtils;
 
@@ -17,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainRepository {
+
+    private static final String TAG = MainRepository.class.getSimpleName();
 
     private static MainRepository sInstance;
 
@@ -37,14 +42,13 @@ public class MainRepository {
         return sInstance;
     }
 
-    public LiveData<List<FavouriteEntry>> loadAllFavourites() {
-        LiveData<List<FavouriteEntry>> data = mDatabase.favouriteDao().loadAllFavourites();
-        if (data == null) System.out.println("loadAllFav in repository - data is null");
-        if (data != null) {
-            System.out.println("loadAllFav in repository - livedata is not null, but what's inside?");
-            System.out.println(data.getValue());
-        }
-        return data;
+    public void loadAllFavourites(final MutableLiveData<List<FavouriteEntry>> favourites) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            List<FavouriteEntry> favouriteEntries = mDatabase.favouriteDao().loadAllFavourites();
+            Log.d(TAG, "in loadAllFavourites");
+            Log.d(TAG, String.valueOf(favouriteEntries));
+            favourites.postValue(favouriteEntries);
+        });
     }
 
     public void loadPopular(final MutableLiveData<List<MovieModel>> movies, String apiKey) {
@@ -57,7 +61,6 @@ public class MainRepository {
                 String noDataString = "none";
                 ArrayList<MovieModel> list = JsonMovieUtils.getMovieListFromJson(jsonMovieResponse, noDataString);
                 movies.postValue(list);
-                System.out.println("Background thread: loadPopular: " + list);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
@@ -73,7 +76,6 @@ public class MainRepository {
                 jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(url);
                 String noDataString = "none";
                 ArrayList<MovieModel> list = JsonMovieUtils.getMovieListFromJson(jsonMovieResponse, noDataString);
-                System.out.println("Background thread: loadTopRated: " + list);
                 movies.postValue(list);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();

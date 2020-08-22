@@ -36,10 +36,10 @@ public class FavouriteEntry extends MovieModel implements Parcelable {
     @Ignore
     protected FavouriteEntry(Parcel in) {
         super();
-        super.setId(in.readInt());
+        setId(in.readInt());
         externalId = in.readInt();
-        super.setTitle(in.readString());
-        super.setMoviePosterUri((Uri) in.readValue(Uri.class.getClassLoader()));
+        setTitle(in.readString());
+        setMoviePosterUri((Uri) in.readValue(Uri.class.getClassLoader()));
     }
 
     @Ignore
@@ -70,10 +70,9 @@ public class FavouriteEntry extends MovieModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-
-        parcel.writeInt(super.getId());
+        parcel.writeInt(getId());
         parcel.writeInt(externalId);
-        parcel.writeString(super.getTitle());
-        parcel.writeString(super.getMoviePosterUri().toString());
+        parcel.writeString(getTitle());
+        parcel.writeString(getMoviePosterUri().toString());
     }
 }

@@ -3,6 +3,7 @@ package com.example.android.popularmovies.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.database.AppDatabase;
 import com.example.android.popularmovies.databinding.ActivityDetailsBinding;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.Review;
@@ -22,6 +24,7 @@ import com.example.android.popularmovies.viewmodel.DetailsViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -46,7 +49,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         Movie movie = intentThatStartedActivity.getParcelableExtra("movie");
 
         DetailsViewModelFactory factory = new DetailsViewModelFactory(
-                movie, getString(R.string.API_KEY));
+                AppDatabase.getInstance(getApplicationContext()), movie, getString(R.string.API_KEY));
         mViewModel = new ViewModelProvider(this, factory).get(DetailsViewModel.class);
 
         setTitle(getString(R.string.detail_activity_title));
@@ -58,6 +61,9 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
         mViewModel.getTrailers().observe(this, this::loadUIWithTrailers);
         mViewModel.getReviews().observe(this, this::loadUIWithReviews);
+
+        Log.d(TAG, "isFavourite: " + mViewModel.getIsFavourite());
+        if (mViewModel.getIsFavourite()) mBinding.addToFavouriteButton.setChecked(true);
     }
 
     private void populateUiWithMovieData(Movie movie) {
@@ -132,9 +138,11 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     public void clickFavouriteButton(View v) {
         boolean checked = mBinding.addToFavouriteButton.isChecked();
         if (checked) {
-            Toast.makeText(this, "checked", Toast.LENGTH_SHORT).show();
+            mViewModel.addFavourite();
+            Toast.makeText(this, "added", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "unchecked", Toast.LENGTH_SHORT).show();
+            mViewModel.removeFavourite();
+            Toast.makeText(this, "removed", Toast.LENGTH_SHORT).show();
         }
     }
 }

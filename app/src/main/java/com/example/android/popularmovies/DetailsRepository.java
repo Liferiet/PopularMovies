@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.android.popularmovies.database.AppDatabase;
+import com.example.android.popularmovies.database.FavouriteEntry;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
@@ -15,20 +17,23 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DetailsRepository {
 
     private static DetailsRepository sInstance;
 
-    private DetailsRepository() {
+    private final AppDatabase mDatabase;
 
+    private DetailsRepository(final AppDatabase mDatabase) {
+        this.mDatabase = mDatabase;
     }
 
-    public static DetailsRepository getInstance() {
+    public static DetailsRepository getInstance(final AppDatabase database) {
         if (sInstance == null) {
             synchronized (DetailsRepository.class) {
                 if (sInstance == null) {
-                    sInstance = new DetailsRepository();
+                    sInstance = new DetailsRepository(database);
                 }
             }
         }
@@ -62,6 +67,27 @@ public class DetailsRepository {
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
+        });
+    }
+
+    public void addFavourite(Movie movie) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            FavouriteEntry favourite = new FavouriteEntry(movie.getId(),
+                    movie.getTitle(), movie.getMoviePosterUri());
+            mDatabase.favouriteDao().insertFavourite(favourite);
+        });
+    }
+
+    public void removeFavourite(Movie movie) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            mDatabase.favouriteDao().deleteFavourite(movie.getId());
+        });
+    }
+
+    public void isFavourite(Movie movie, final AtomicBoolean isFavourite) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            int id = mDatabase.favouriteDao().isFavourite(movie.getId());
+            if (id > 0) isFavourite.set(true);
         });
     }
 }

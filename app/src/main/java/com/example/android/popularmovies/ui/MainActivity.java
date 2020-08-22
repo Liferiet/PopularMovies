@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_action_menu);
 
+
         mBinding.loadingDataPb.setVisibility(View.VISIBLE);
 
         setupDrawerContent(mBinding.navView);
@@ -58,10 +59,10 @@ public class MainActivity extends AppCompatActivity implements
                 GridDecorator.calculateNoOfColumns(this));
         mBinding.recyclerviewMovies.setLayoutManager(manager);
         mBinding.recyclerviewMovies.setHasFixedSize(true);
+        mAdapter = new MovieAdapter(this);
 
         mViewModel.getCurrentMovies().observe(this, movies -> {
             mBinding.loadingDataPb.setVisibility(View.INVISIBLE);
-            mAdapter = new MovieAdapter(this);
             mAdapter.setMovieData((ArrayList<MovieModel>) movies);
             mBinding.recyclerviewMovies.setAdapter(mAdapter);
             showResults();
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
 
                     mBinding.loadingDataPb.setVisibility(View.VISIBLE);
-                    mBinding.recyclerviewMovies.setAdapter(null);
+                    mAdapter.setMovieData(new ArrayList<MovieModel>(0));
 
                     switch (menuItem.getItemId()) {
                         case R.id.nav_load_favourites:
