@@ -18,25 +18,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-class DataRepository {
+public class MainRepository {
 
-    private static DataRepository sInstance;
+    private static MainRepository sInstance;
 
     private final AppDatabase mDatabase;
-    private MediatorLiveData<List<MovieModel>> mObservableMovies;
 
-    private DataRepository(final AppDatabase database) {
+    private MainRepository(final AppDatabase database) {
         mDatabase = database;
-        mObservableMovies = new MediatorLiveData<>();
-
-        //mObservableMovies.addSource()
     }
 
-    public static DataRepository getInstance(final AppDatabase database) {
+    public static MainRepository getInstance(final AppDatabase database) {
         if (sInstance == null) {
-            synchronized (DataRepository.class) {
+            synchronized (MainRepository.class) {
                 if (sInstance == null) {
-                    sInstance = new DataRepository(database);
+                    sInstance = new MainRepository(database);
                 }
             }
         }
@@ -86,8 +82,5 @@ class DataRepository {
             }
         });
     }
-
-
-
 
 }

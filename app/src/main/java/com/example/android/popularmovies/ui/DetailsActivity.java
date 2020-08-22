@@ -15,13 +15,17 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.databinding.ActivityDetailsBinding;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
-import com.example.android.popularmovies.utils.JsonMovieUtils;
-import com.example.android.popularmovies.utils.NetworkUtils;
+import com.example.android.popularmovies.viewmodel.DetailsViewModel;
+import com.example.android.popularmovies.viewmodel.DetailsViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -30,14 +34,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks,
-        View.OnClickListener {
+public class DetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = DetailsActivity.class.getSimpleName();
     private final int LOADER_ID = 2431;
 
     private Movie mMovie;
     private ActivityDetailsBinding mBinding;
+
+    private DetailsViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,23 +56,37 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             return;
         }
 
-        mMovie = intentThatStartedActivity.getParcelableExtra("movie");
+        Movie movie = intentThatStartedActivity.getParcelableExtra("movie");
+
+        DetailsViewModelFactory factory = new DetailsViewModelFactory(
+                movie, getString(R.string.API_KEY));
+        mViewModel = new ViewModelProvider(this, factory).get(DetailsViewModel.class);
 
         setTitle(getString(R.string.detail_activity_title));
 
         mBinding = DataBindingUtil
                 .setContentView(this, R.layout.activity_details);
 
-        mBinding.detailsTitleTv.setText(mMovie.getTitle());
-        mBinding.detailMovieData.detailsOriginalTitleTv.setText(mMovie.getOriginalTitle());
+        populateUiWithMovieData(movie);
 
-        String rating = mMovie.getUserRating() + "/10.0";
+        mViewModel.getTrailers().observe(this, this::loadUIWithTrailers);
+        mViewModel.getReviews().observe(this, this::loadUIWithReviews);
+
+        mViewModel.loadReviewsForMovie();
+        mViewModel.loadTrailersForMovie();
+    }
+
+    private void populateUiWithMovieData(Movie movie) {
+        mBinding.detailsTitleTv.setText(movie.getTitle());
+        mBinding.detailMovieData.detailsOriginalTitleTv.setText(movie.getOriginalTitle());
+
+        String rating = movie.getUserRating() + "/10.0";
         mBinding.detailMovieData.detailsRatingTv.setText(rating);
 
-        mBinding.detailMovieData.detailsReleaseDateTv.setText(mMovie.getReleaseDate());
-        mBinding.detailMovieOverview.detailsOverviewTv.setText(mMovie.getOverview());
+        mBinding.detailMovieData.detailsReleaseDateTv.setText(movie.getReleaseDate());
+        mBinding.detailMovieOverview.detailsOverviewTv.setText(movie.getOverview());
 
-        Uri posterUri = mMovie.getMoviePosterUri();
+        Uri posterUri = movie.getMoviePosterUri();
         Picasso.get().load(posterUri).placeholder(R.drawable.placeholder)
                 .into(mBinding.detailsPosterIv);
 
@@ -75,8 +94,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     }
 
-    private void loadUIWithTrailers() {
-        ArrayList<Trailer> trailers = mMovie.getTrailers();
+    private void loadUIWithTrailers(ArrayList<Trailer> trailers) {
         LayoutInflater inflater = LayoutInflater.from(this);
 
         if (trailers.isEmpty()) {
@@ -96,8 +114,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         }
     }
 
-    private void loadUIWithReviews() {
-        ArrayList<Review> reviews = mMovie.getReviews();
+    private void loadUIWithReviews(ArrayList<Review> reviews) {
         LayoutInflater inflater = LayoutInflater.from(this);
 
         if (reviews.isEmpty()) {
@@ -188,7 +205,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public void onClick(View v) {
         int position = (int) v.getTag();
-        Uri uri = mMovie.getTrailers().get(position).getUri();
+        Uri uri = mViewModel.getTrailers().getValue().get(position).getUri();
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);

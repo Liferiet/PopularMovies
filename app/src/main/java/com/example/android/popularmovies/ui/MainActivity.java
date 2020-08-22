@@ -27,8 +27,8 @@ import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.example.android.popularmovies.MainViewModel;
-import com.example.android.popularmovies.MainViewModelFactory;
+import com.example.android.popularmovies.viewmodel.MainViewModel;
+import com.example.android.popularmovies.viewmodel.MainViewModelFactory;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.database.AppDatabase;
 import com.example.android.popularmovies.database.FavouriteEntry;
@@ -80,14 +80,11 @@ public class MainActivity extends AppCompatActivity implements
         mBinding.recyclerviewMovies.setLayoutManager(manager);
         mBinding.recyclerviewMovies.setHasFixedSize(true);
 
-        mAdapter = new MovieAdapter(this);
-
-        mBinding.recyclerviewMovies.setAdapter(mAdapter);
-
-
         mViewModel.getCurrentMovies().observe(this, movies -> {
             mBinding.loadingDataPb.setVisibility(View.INVISIBLE);
+            mAdapter = new MovieAdapter(this);
             mAdapter.setMovieData((ArrayList<MovieModel>) movies);
+            mBinding.recyclerviewMovies.setAdapter(mAdapter);
             showResults();
         });
 
@@ -141,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
 
                     mBinding.loadingDataPb.setVisibility(View.VISIBLE);
-                    //mBinding.recyclerviewMovies.setAdapter(null);
+                    mBinding.recyclerviewMovies.setAdapter(null);
 
                     switch (menuItem.getItemId()) {
                         case R.id.nav_load_favourites:

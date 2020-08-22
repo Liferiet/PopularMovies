@@ -44,7 +44,7 @@ public class DatabaseCreationTest {
 /*            List<User> byName = userDao.findUsersByName("george");
                     assertThat(byName.get(0), equalTo(user));*/
 
-        FavouriteEntry favourite = new FavouriteEntry(123, "tytul", "www.google.com");
+        /*FavouriteEntry favourite = new FavouriteEntry(123, "tytul", "www.google.com");
 
 
 
@@ -60,7 +60,7 @@ public class DatabaseCreationTest {
             assertEquals(liveData.getValue().get(0), favourite);
         } else {
             fail();
-        }
+        }*/
 
     }
 }

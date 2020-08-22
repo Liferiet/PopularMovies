@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.viewmodel;
 
 import android.util.Log;
 
@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.example.android.popularmovies.MainRepository;
 import com.example.android.popularmovies.database.AppDatabase;
 import com.example.android.popularmovies.database.FavouriteEntry;
 import com.example.android.popularmovies.model.MovieModel;
@@ -25,14 +26,14 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<List<MovieModel>> mMoviesFromInternet;
     private LiveData<List<FavouriteEntry>> favouritesFromDatabase;
 
-    private DataRepository mRepository;
+    private MainRepository mRepository;
 
     private String mApiKey;
 
     public MainViewModel(AppDatabase database, String apiKey) {
 
-        Log.d(TAG, "Preparing viewModel");
-        mRepository = DataRepository.getInstance(database);
+        Log.d(TAG, "Preparing main viewModel");
+        mRepository = MainRepository.getInstance(database);
         mApiKey = apiKey;
 
         mMoviesFromInternet = new MutableLiveData<>();
