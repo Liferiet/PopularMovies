@@ -1,15 +1,8 @@
 package com.example.android.popularmovies.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.AsyncTaskLoader;
-import androidx.loader.content.Loader;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -28,18 +21,12 @@ import com.example.android.popularmovies.viewmodel.DetailsViewModel;
 import com.example.android.popularmovies.viewmodel.DetailsViewModelFactory;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class DetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = DetailsActivity.class.getSimpleName();
-    private final int LOADER_ID = 2431;
 
-    private Movie mMovie;
     private ActivityDetailsBinding mBinding;
 
     private DetailsViewModel mViewModel;
@@ -89,9 +76,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         Uri posterUri = movie.getMoviePosterUri();
         Picasso.get().load(posterUri).placeholder(R.drawable.placeholder)
                 .into(mBinding.detailsPosterIv);
-
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
-
     }
 
     private void loadUIWithTrailers(ArrayList<Trailer> trailers) {
@@ -127,7 +111,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
             String author = reviews.get(i).getAuthor();
             String content = reviews.get(i).getContent();
 
-            System.out.println("Author: " + author + " content: " + content);
             ((TextView) v.findViewById(R.id.review_author_tv)).setText(author);
             ((TextView) v.findViewById(R.id.review_content_tv)).setText(content);
 
@@ -137,69 +120,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
             mBinding.reviewsLinearWrapper.addView(v);
         }
-    }
-
-
-    @SuppressLint("StaticFieldLeak")
-    @Override
-    public Loader onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<Movie>(this) {
-
-            Movie cache;
-
-            @Override
-            protected void onStartLoading() {
-                if (cache != null) deliverResult(cache);
-                else {
-                    //mBinding.loadingDataPb.setVisibility(View.VISIBLE);
-                    forceLoad();
-                }
-            }
-
-
-            @Override
-            public Movie loadInBackground() {
-
-                String apiKey = DetailsActivity.this.getString(R.string.API_KEY);
-                int id = mMovie.getId();
-                Log.d("details loadInBg", "id: " + id);
-                URL urlTrailers = NetworkUtils.generateUrlVideosForMovie(apiKey, id);
-                URL urlReviews = NetworkUtils.generateUrlReviewsForMovie(apiKey, id);
-
-                Log.d("Loader Details", "fetching data from internet");
-                try {
-                    String jsonTrailersResponse = NetworkUtils.getResponseFromHttpUrl(urlTrailers);
-                    String jsonReviewsResponse = NetworkUtils.getResponseFromHttpUrl(urlReviews);
-
-                    mMovie.setTrailers(JsonMovieUtils.getTrailersFromJson(jsonTrailersResponse));
-                    mMovie.setReviews(JsonMovieUtils.getReviewFromJson(jsonReviewsResponse));
-
-                    return mMovie;
-
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            public void deliverResult(Movie data) {
-                cache = data;
-                super.deliverResult(data);
-                Log.d("Loader Main", "Cache stored");
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader loader, Object data) {
-        loadUIWithTrailers();
-        loadUIWithReviews();
-    }
-
-    @Override
-    public void onLoaderReset(Loader loader) {
-
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.example.android.popularmovies.utils;
 
-import android.content.Context;
 import android.net.Uri;
-
-import com.example.android.popularmovies.R;
 
 import java.io.IOException;
 import java.io.InputStream;

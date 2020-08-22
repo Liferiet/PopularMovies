@@ -1,10 +1,7 @@
 package com.example.android.popularmovies.utils;
 
-import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
-import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.MovieModel;
 import com.example.android.popularmovies.model.Review;
@@ -14,10 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class JsonMovieUtils {
@@ -38,7 +31,6 @@ public class JsonMovieUtils {
             Movie movie = new Movie();
 
             int id = movieJson.optInt("id", -1);
-            //Log.d("Json getMovieList", "movie id: " + id);
             movie.setId(id);
 
             movie.setTitle(movieJson.optString("title", noDataFallback));

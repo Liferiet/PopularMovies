@@ -12,8 +12,6 @@ public class Movie extends MovieModel implements Parcelable {
     private String overview;
     private String userRating;
     private String releaseDate;
-    private ArrayList<Trailer> trailers;
-    private ArrayList<Review> reviews;
 
     public Movie() {
     }
@@ -96,20 +94,4 @@ public class Movie extends MovieModel implements Parcelable {
             return new Movie[size];
         }
     };
-
-    public ArrayList<Trailer> getTrailers() {
-        return trailers;
-    }
-
-    public void setTrailers(ArrayList<Trailer> trailers) {
-        this.trailers = trailers;
-    }
-
-    public ArrayList<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(ArrayList<Review> reviews) {
-        this.reviews = reviews;
-    }
 }

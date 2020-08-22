@@ -1,13 +1,11 @@
 package com.example.android.popularmovies;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.android.popularmovies.database.AppDatabase;
 import com.example.android.popularmovies.database.FavouriteEntry;
 import com.example.android.popularmovies.model.MovieModel;
-import com.example.android.popularmovies.ui.MainActivity;
 import com.example.android.popularmovies.utils.JsonMovieUtils;
 import com.example.android.popularmovies.utils.NetworkUtils;
 

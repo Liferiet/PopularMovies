@@ -7,7 +7,6 @@ import android.os.Parcelable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.example.android.popularmovies.model.MovieModel;
@@ -16,13 +15,8 @@ import com.example.android.popularmovies.model.MovieModel;
 @TypeConverters({UriConverter.class})
 public class FavouriteEntry extends MovieModel implements Parcelable {
 
-/*    @PrimaryKey(autoGenerate = true)
-    private int id;*/
     @ColumnInfo(name = "external_id")
     private int externalId;
-    /*private String title;*/
-/*    @ColumnInfo(name = "poster_uri")
-    private String moviePosterUri;*/
 
     public FavouriteEntry() {
     }
@@ -36,10 +30,7 @@ public class FavouriteEntry extends MovieModel implements Parcelable {
 
     public FavouriteEntry(int id, int externalId, String title, Uri posterUri) {
         super(id, title, posterUri);
-/*        this.id = id;*/
         this.externalId = externalId;
-/*        this.title = title;
-        this.moviePosterUri = posterUri;*/
     }
 
     @Ignore
@@ -64,14 +55,6 @@ public class FavouriteEntry extends MovieModel implements Parcelable {
         }
     };
 
-/*    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }*/
-
     public int getExternalId() {
         return externalId;
     }
@@ -79,22 +62,6 @@ public class FavouriteEntry extends MovieModel implements Parcelable {
     public void setExternalId(int externalId) {
         this.externalId = externalId;
     }
-
-/*    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getPosterUri() {
-        return moviePosterUri;
-    }
-
-    public void setPosterUri(String posterUri) {
-        this.moviePosterUri = posterUri;
-    }*/
 
     @Override
     public int describeContents() {

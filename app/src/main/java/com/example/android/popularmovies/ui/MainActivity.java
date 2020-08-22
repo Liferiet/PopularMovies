@@ -1,49 +1,28 @@
 package com.example.android.popularmovies.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.AsyncTaskLoader;
-import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.android.popularmovies.viewmodel.MainViewModel;
 import com.example.android.popularmovies.viewmodel.MainViewModelFactory;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.database.AppDatabase;
-import com.example.android.popularmovies.database.FavouriteEntry;
 import com.example.android.popularmovies.databinding.ActivityMainBinding;
 import com.example.android.popularmovies.model.MovieModel;
-import com.example.android.popularmovies.utils.JsonMovieUtils;
-import com.example.android.popularmovies.utils.NetworkUtils;
 import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         MovieAdapter.OnListItemClickListener {
