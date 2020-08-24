@@ -70,14 +70,6 @@
                     app:layout_constraintVertical_bias="0.0"
                     tools:srcCompat="@drawable/placeholder" />
 
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/barrier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="details_poster_iv,details_title_tv"
-                    tools:layout_editor_absoluteY="325dp" />
-
                 <ToggleButton
                     android:id="@+id/add_to_favourite_button"
                     android:layout_width="0dp"
@@ -94,7 +86,8 @@
                     android:textOn="@string/remove_from_favourites_button"
                     app:layout_constraintStart_toStartOf="@+id/guideline2"
                     app:layout_constraintTop_toTopOf="@+id/details_poster_iv"
-                    android:onClick="clickFavouriteButton"/>
+                    android:onClick="clickFavouriteButton"
+                    android:drawableStart="@drawable/favourite_toggle_selector" />
 
                 <include
                     android:id="@+id/detail_movie_data"
@@ -111,6 +104,14 @@
                     app:layout_constraintStart_toStartOf="@+id/guideline2"
                     app:layout_constraintTop_toBottomOf="@+id/add_to_favourite_button"
                     app:layout_constraintVertical_bias="0.0" />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="details_poster_iv,detail_movie_data"
+                    tools:layout_editor_absoluteY="325dp" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline2"
