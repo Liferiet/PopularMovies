@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.android.popularmovies.database.AppDatabase;
-import com.example.android.popularmovies.database.FavouriteEntry;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
@@ -71,17 +70,13 @@ public class DetailsRepository {
     }
 
     public void addFavourite(Movie movie) {
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            FavouriteEntry favourite = new FavouriteEntry(movie.getId(),
-                    movie.getTitle(), movie.getMoviePosterUri());
-            mDatabase.favouriteDao().insertFavourite(favourite);
-        });
+        AppExecutors.getInstance().diskIO().execute(() ->
+                mDatabase.favouriteDao().insertFavourite(movie));
     }
 
     public void removeFavourite(Movie movie) {
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            mDatabase.favouriteDao().deleteFavourite(movie.getId());
-        });
+        AppExecutors.getInstance().diskIO().execute(() ->
+            mDatabase.favouriteDao().deleteFavourite(movie.getId()));
     }
 
     public void isFavourite(Movie movie, final AtomicBoolean isFavourite) {

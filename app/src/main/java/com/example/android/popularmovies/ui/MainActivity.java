@@ -14,12 +14,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.viewmodel.MainViewModel;
 import com.example.android.popularmovies.viewmodel.MainViewModelFactory;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.database.AppDatabase;
 import com.example.android.popularmovies.databinding.ActivityMainBinding;
-import com.example.android.popularmovies.model.MovieModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mViewModel.getCurrentMovies().observe(this, movies -> {
             mBinding.loadingDataPb.setVisibility(View.INVISIBLE);
-            mAdapter.setMovieData((ArrayList<MovieModel>) movies);
+            mAdapter.setMovieData((ArrayList<Movie>) movies);
             mBinding.recyclerviewMovies.setAdapter(mAdapter);
             showResults();
         });
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements
 
     // Listener method for RecyclerView's adapter
     @Override
-    public void onListItemClick(MovieModel movie) {
+    public void onListItemClick(Movie movie) {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("movie", movie);
 
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
 
                     mBinding.loadingDataPb.setVisibility(View.VISIBLE);
-                    mAdapter.setMovieData(new ArrayList<MovieModel>(0));
+                    mAdapter.setMovieData(new ArrayList<>(0));
 
                     switch (menuItem.getItemId()) {
                         case R.id.nav_load_favourites:

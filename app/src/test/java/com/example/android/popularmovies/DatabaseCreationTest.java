@@ -2,14 +2,12 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.android.popularmovies.database.AppDatabase;
 import com.example.android.popularmovies.database.FavouriteDao;
-import com.example.android.popularmovies.database.FavouriteEntry;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,14 +15,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class DatabaseCreationTest {
 
-    private FavouriteDao favouriteDao;
+/*    private FavouriteDao favouriteDao;
     private AppDatabase db;
 
     @Before
@@ -41,10 +36,10 @@ public class DatabaseCreationTest {
 
     @Test
     public void writeFavouriteAndReadInList() throws Exception {
-/*            List<User> byName = userDao.findUsersByName("george");
-                    assertThat(byName.get(0), equalTo(user));*/
+            List<User> byName = userDao.findUsersByName("george");
+                    assertThat(byName.get(0), equalTo(user));
 
-        /*FavouriteEntry favourite = new FavouriteEntry(123, "tytul", "www.google.com");
+        FavouriteEntry favourite = new FavouriteEntry(123, "tytul", "www.google.com");
 
 
 
@@ -60,7 +55,7 @@ public class DatabaseCreationTest {
             assertEquals(liveData.getValue().get(0), favourite);
         } else {
             fail();
-        }*/
+        }
 
-    }
+    }*/
 }

@@ -9,8 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.android.popularmovies.MainRepository;
 import com.example.android.popularmovies.database.AppDatabase;
-import com.example.android.popularmovies.database.FavouriteEntry;
-import com.example.android.popularmovies.model.MovieModel;
+import com.example.android.popularmovies.model.Movie;
 
 import java.util.List;
 
@@ -18,9 +17,9 @@ public class MainViewModel extends ViewModel {
 
     private static final String TAG = MainViewModel.class.getSimpleName();
 
-    private MediatorLiveData<List<? extends MovieModel>> mMovies;
-    private MutableLiveData<List<MovieModel>> mMoviesFromInternet;
-    private MutableLiveData<List<FavouriteEntry>> favouritesFromDatabase;
+    private MediatorLiveData<List<Movie>> mMovieList;
+    private MutableLiveData<List<Movie>> mMoviesFromInternet;
+    private LiveData<List<Movie>> mFavourites;
 
     private MainRepository mRepository;
 
@@ -32,30 +31,35 @@ public class MainViewModel extends ViewModel {
         mRepository = MainRepository.getInstance(database);
         mApiKey = apiKey;
 
+        mMovieList = new MediatorLiveData<>();
         mMoviesFromInternet = new MutableLiveData<>();
-        favouritesFromDatabase = new MutableLiveData<>();
-        mMovies = new MediatorLiveData<>();
-        mMovies.addSource(mMoviesFromInternet,
-                movieModels -> mMovies.setValue(movieModels));
-        mMovies.addSource(favouritesFromDatabase,
-                movieModels -> mMovies.setValue(movieModels));
+        mFavourites = getFavourites();
+
+        mMovieList.addSource(mMoviesFromInternet, movies -> mMovieList.setValue(movies));
 
         loadPopular();
     }
 
-    public LiveData<List<? extends MovieModel>> getCurrentMovies() {
-        return mMovies;
+    public LiveData<List<Movie>> getCurrentMovies() {
+        return mMovieList;
+    }
+
+    private LiveData<List<Movie>> getFavourites() {
+        return mRepository.loadAllFavourites();
     }
 
     public void loadFavourites() {
-        mRepository.loadAllFavourites(favouritesFromDatabase);
+        mMovieList.addSource(mFavourites, movies ->
+                mMovieList.setValue(mFavourites.getValue()));
     }
 
     public void loadPopular() {
+        mMovieList.removeSource(mFavourites);
         mRepository.loadPopular(mMoviesFromInternet, mApiKey);
     }
 
     public void loadTopRated() {
+        mMovieList.removeSource(mFavourites);
         mRepository.loadTopRated(mMoviesFromInternet, mApiKey);
     }
 

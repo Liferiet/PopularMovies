@@ -1,14 +1,10 @@
 package com.example.android.popularmovies;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.android.popularmovies.database.AppDatabase;
-import com.example.android.popularmovies.database.FavouriteEntry;
-import com.example.android.popularmovies.model.MovieModel;
-import com.example.android.popularmovies.ui.MainActivity;
+import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.utils.JsonMovieUtils;
 import com.example.android.popularmovies.utils.NetworkUtils;
 
@@ -42,24 +38,19 @@ public class MainRepository {
         return sInstance;
     }
 
-    public void loadAllFavourites(final MutableLiveData<List<FavouriteEntry>> favourites) {
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            List<FavouriteEntry> favouriteEntries = mDatabase.favouriteDao().loadAllFavourites();
-            Log.d(TAG, "in loadAllFavourites");
-            Log.d(TAG, String.valueOf(favouriteEntries));
-            favourites.postValue(favouriteEntries);
-        });
+    public LiveData<List<Movie>> loadAllFavourites() {
+        return mDatabase.favouriteDao().loadAllFavourites();
     }
 
-    public void loadPopular(final MutableLiveData<List<MovieModel>> movies, String apiKey) {
+    public void loadPopular(final MutableLiveData<List<Movie>> movies, String apiKey) {
         AppExecutors.getInstance().networkIO().execute(() -> {
             URL url = NetworkUtils.generateUrlSortByPopular(apiKey);
 
-            String jsonMovieResponse = null;
+            String jsonMovieResponse;
             try {
                 jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(url);
                 String noDataString = "none";
-                ArrayList<MovieModel> list = JsonMovieUtils.getMovieListFromJson(jsonMovieResponse, noDataString);
+                ArrayList<Movie> list = JsonMovieUtils.getMovieListFromJson(jsonMovieResponse, noDataString);
                 movies.postValue(list);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -67,15 +58,15 @@ public class MainRepository {
         });
     }
 
-    public void loadTopRated(final MutableLiveData<List<MovieModel>> movies, String apiKey) {
+    public void loadTopRated(final MutableLiveData<List<Movie>> movies, String apiKey) {
         AppExecutors.getInstance().networkIO().execute(() -> {
             URL url = NetworkUtils.generateUrlSortByTopRated(apiKey);
 
-            String jsonMovieResponse = null;
+            String jsonMovieResponse;
             try {
                 jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(url);
                 String noDataString = "none";
-                ArrayList<MovieModel> list = JsonMovieUtils.getMovieListFromJson(jsonMovieResponse, noDataString);
+                ArrayList<Movie> list = JsonMovieUtils.getMovieListFromJson(jsonMovieResponse, noDataString);
                 movies.postValue(list);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();

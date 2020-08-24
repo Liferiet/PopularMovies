@@ -3,7 +3,6 @@ package com.example.android.popularmovies.utils;
 import android.net.Uri;
 
 import com.example.android.popularmovies.model.Movie;
-import com.example.android.popularmovies.model.MovieModel;
 import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
 
@@ -18,14 +17,14 @@ public class JsonMovieUtils {
     private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w185";
     private static final String YOUTUBE_URL = "https://youtu.be/";
 
-    public static ArrayList<MovieModel> getMovieListFromJson (String data, String noDataFallback) throws JSONException {
+    public static ArrayList<Movie> getMovieListFromJson (String data, String noDataFallback) throws JSONException {
         JSONObject fullJSONObject = new JSONObject(data);
 
         JSONArray results = fullJSONObject.optJSONArray("results");
 
         if (results == null) return null;
 
-        ArrayList<MovieModel> movieList = new ArrayList<>(results.length());
+        ArrayList<Movie> movieList = new ArrayList<>(results.length());
         for (int i = 0; i < results.length(); i++) {
             JSONObject movieJson = results.getJSONObject(i);
             Movie movie = new Movie();

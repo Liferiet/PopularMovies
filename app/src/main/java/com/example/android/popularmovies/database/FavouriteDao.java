@@ -1,30 +1,27 @@
 package com.example.android.popularmovies.database;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.android.popularmovies.model.MovieModel;
+import com.example.android.popularmovies.model.Movie;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Dao
 public interface FavouriteDao {
 
-    @Query("SELECT * FROM favourite_movie ORDER BY id")
-    List<FavouriteEntry> loadAllFavourites();
+    @Query("SELECT * FROM favourite_movie ORDER BY internal_id")
+    LiveData<List<Movie>> loadAllFavourites();
 
     @Insert
-    void insertFavourite(FavouriteEntry favouriteEntry);
+    void insertFavourite(Movie movie);
 
-    @Query("DELETE FROM favourite_movie WHERE external_id=:id")
+    @Query("DELETE FROM favourite_movie WHERE id=:id")
     void deleteFavourite(int id);
 
-    @Query("SELECT id FROM favourite_movie WHERE external_id = :id LIMIT 1")
+    @Query("SELECT id FROM favourite_movie WHERE id = :id LIMIT 1")
     int isFavourite(int id);
 
 }
