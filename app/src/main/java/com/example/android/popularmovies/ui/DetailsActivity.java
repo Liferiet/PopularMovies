@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
@@ -52,10 +53,14 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                 AppDatabase.getInstance(getApplicationContext()), movie, getString(R.string.API_KEY));
         mViewModel = new ViewModelProvider(this, factory).get(DetailsViewModel.class);
 
-        setTitle(getString(R.string.detail_activity_title));
-
         mBinding = DataBindingUtil
                 .setContentView(this, R.layout.activity_details);
+
+        setSupportActionBar(mBinding.toolbarInclude.detailsToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+
 
         populateUiWithMovieData(movie);
 
@@ -67,7 +72,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void populateUiWithMovieData(Movie movie) {
-        mBinding.detailsTitleTv.setText(movie.getTitle());
+        mBinding.toolbarInclude.titleDetailsToolbar.setText(movie.getTitle());
         mBinding.detailMovieData.detailsOriginalTitleTv.setText(movie.getOriginalTitle());
 
         String rating = movie.getUserRating() + "/10.0";

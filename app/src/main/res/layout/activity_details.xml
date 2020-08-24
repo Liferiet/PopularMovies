@@ -20,19 +20,26 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <include
+                    android:id="@+id/toolbar_include"
+                    layout="@layout/details_toolbar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <FrameLayout
+
+<!--                <FrameLayout
                     android:id="@+id/title_background_frame"
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
                     android:background="@color/colorPrimaryLight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/toolbar_include">
 
-                </FrameLayout>
+                </FrameLayout>-->
 
-                <TextView
+<!--                <TextView
                     android:id="@+id/details_title_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -43,10 +50,10 @@
                     android:maxLines="3"
                     android:textColor="#FFF"
                     android:textSize="25sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/title_background_frame"
+                    app:layout_constraintBottom_toBottomOf="@id/toolbar_include"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="title" />
+                    tools:text="title" />-->
 
 
                 <ImageView
@@ -66,7 +73,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/guideline2"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/title_background_frame"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar_include"
                     app:layout_constraintVertical_bias="0.0"
                     tools:srcCompat="@drawable/placeholder" />
 

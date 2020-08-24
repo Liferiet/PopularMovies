@@ -21,7 +21,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <FrameLayout
+                <include
+                    android:id="@+id/toolbar_include"
+                    layout="@layout/details_toolbar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+<!--                <FrameLayout
                     android:id="@+id/title_frame_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -43,7 +50,7 @@
                         android:textColor="#FFF"
                         android:textSize="25sp" />
 
-                </FrameLayout>
+                </FrameLayout>-->
 
 
                 <ImageView
@@ -55,7 +62,7 @@
                     android:contentDescription="@string/image_view_description"
                     android:padding="8dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/title_frame_layout"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar_include"
                     tools:srcCompat="@drawable/placeholder">
 
                 </ImageView>
