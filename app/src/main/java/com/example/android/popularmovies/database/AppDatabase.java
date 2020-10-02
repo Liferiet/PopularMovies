@@ -11,6 +11,9 @@ import androidx.room.RoomDatabase;
 
 import com.example.android.popularmovies.model.Movie;
 
+/**
+ * Creates persistence Room Database in device storage
+ */
 @Database(entities = {Movie.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 

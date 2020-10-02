@@ -27,6 +27,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Display the movie details information, poster, list of trailers and list of reviews
+ */
 public class DetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = DetailsActivity.class.getSimpleName();
@@ -35,6 +38,11 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
     private DetailsViewModel mViewModel;
 
+    /**
+     * Initializes respective ViewModel and observes trailers and reviews lists.
+     * Checks if intent has correct movie info and populates the UI with data.
+     * @param savedInstanceState information saved before app was paused or rotated
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +68,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
-
         populateUiWithMovieData(movie);
 
         mViewModel.getTrailers().observe(this, this::loadUIWithTrailers);
@@ -86,6 +92,11 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                 .into(mBinding.detailsPosterIv);
     }
 
+    /**
+     * Creates corresponding number of text views for each trailer and adds on click handler
+     * to view the trailer (e.g. open YouTube application)
+     * @param trailers list of trailers
+     */
     private void loadUIWithTrailers(ArrayList<Trailer> trailers) {
         LayoutInflater inflater = LayoutInflater.from(this);
 
@@ -106,6 +117,10 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * Creates corresponding number of text views for each review
+     * @param reviews list of reviews
+     */
     private void loadUIWithReviews(ArrayList<Review> reviews) {
         LayoutInflater inflater = LayoutInflater.from(this);
 
@@ -130,6 +145,10 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * Handler for click events on the trailers list - e.g. open YouTube application
+     * @param v view that was clicked
+     */
     @Override
     public void onClick(View v) {
         int position = (int) v.getTag();

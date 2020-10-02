@@ -15,6 +15,10 @@ import com.example.android.popularmovies.model.Trailer;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Stores data for DetailsActivity.
+ * Has reference to repository that is responsible for the entire data retrieval logic
+ */
 public class DetailsViewModel extends ViewModel {
 
     private static final String TAG = MainViewModel.class.getSimpleName();
@@ -29,6 +33,13 @@ public class DetailsViewModel extends ViewModel {
 
     private String mApiKey;
 
+    /**
+     * Constructor
+     * Checks if a movie is in the database as favourite and loads reviews and trailers for this
+     * movie
+     * @param database instance created at application startup
+     * @param apiKey application API_KEY retrieved from remote source
+     */
     public DetailsViewModel(AppDatabase database, Movie movie, String apiKey) {
         Log.d(TAG, "Preparing main viewModel");
         mRepository = DetailsRepository.getInstance(database);
@@ -66,6 +77,9 @@ public class DetailsViewModel extends ViewModel {
         mRepository.removeFavourite(mMovie);
     }
 
+    /**
+     * Checks if movie is in database as favourite and writes the result in second parameter
+     */
     private void isFavourite() {
         mRepository.isFavourite(mMovie, mIsFavourite);
     }

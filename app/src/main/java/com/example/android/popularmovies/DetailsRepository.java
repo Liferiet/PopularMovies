@@ -18,6 +18,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ *  Class responsible for communication with database and network sources
+ *  and handles the entire logic of operations
+ */
 public class DetailsRepository {
 
     private static DetailsRepository sInstance;
@@ -28,6 +32,10 @@ public class DetailsRepository {
         this.mDatabase = mDatabase;
     }
 
+    /**
+     * Returns instance of repository
+     * @param database instance created at application startup
+     */
     public static DetailsRepository getInstance(final AppDatabase database) {
         if (sInstance == null) {
             synchronized (DetailsRepository.class) {
@@ -39,6 +47,12 @@ public class DetailsRepository {
         return sInstance;
     }
 
+    /**
+     * Retrieves reviews for the movie from remote data source
+     * @param reviews the list that will be returned with the data
+     * @param apiKey application API_KEY
+     * @param movie a movie about which information is needed
+     */
     public void loadReviews(MutableLiveData<ArrayList<Review>> reviews, String apiKey, Movie movie) {
         AppExecutors.getInstance().networkIO().execute(() -> {
             int id = movie.getId();
@@ -54,6 +68,12 @@ public class DetailsRepository {
         });
     }
 
+    /**
+     * Retrieves trailers for the movie from remote data source
+     * @param trailers the list that will be returned with the data
+     * @param apiKey application API_KEY
+     * @param movie a movie about which information is needed
+     */
     public void loadTrailers(MutableLiveData<ArrayList<Trailer>> trailers, String apiKey, Movie movie) {
         AppExecutors.getInstance().networkIO().execute(() -> {
             int id = movie.getId();
@@ -69,16 +89,29 @@ public class DetailsRepository {
         });
     }
 
+    /**
+     * Adds a movie to the database
+     * @param movie a movie to add to the database
+     */
     public void addFavourite(Movie movie) {
         AppExecutors.getInstance().diskIO().execute(() ->
                 mDatabase.favouriteDao().insertFavourite(movie));
     }
 
+    /**
+     * Removes a movie from the database
+     * @param movie a movie to remove from the database
+     */
     public void removeFavourite(Movie movie) {
         AppExecutors.getInstance().diskIO().execute(() ->
             mDatabase.favouriteDao().deleteFavourite(movie.getId()));
     }
 
+    /**
+     * Checks if movie is in database as a favourite
+     * @param movie a movie to check if it is a favourite
+     * @param isFavourite value to return with data
+     */
     public void isFavourite(Movie movie, final AtomicBoolean isFavourite) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             int id = mDatabase.favouriteDao().isFavourite(movie.getId());

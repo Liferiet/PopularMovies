@@ -15,18 +15,25 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  Class responsible for communication with database and network sources
+ *  and handles the entire logic of operations
+ */
 public class MainRepository {
 
     private static final String TAG = MainRepository.class.getSimpleName();
 
     private static MainRepository sInstance;
-
     private final AppDatabase mDatabase;
 
     private MainRepository(final AppDatabase database) {
         mDatabase = database;
     }
 
+    /**
+     * Returns instance of repository
+     * @param database instance created at application startup
+     */
     public static MainRepository getInstance(final AppDatabase database) {
         if (sInstance == null) {
             synchronized (MainRepository.class) {
@@ -38,10 +45,19 @@ public class MainRepository {
         return sInstance;
     }
 
+    /**
+     * Reads the entire list of movies from the database
+     * @return LiveData object with list of favourites movies
+     */
     public LiveData<List<Movie>> loadAllFavourites() {
         return mDatabase.favouriteDao().loadAllFavourites();
     }
 
+    /**
+     * Retrieve list of popular movies from remote data source
+     * @param movies the list that will be returned with the data
+     * @param apiKey application API_KEY
+     */
     public void loadPopular(final MutableLiveData<List<Movie>> movies, String apiKey) {
         AppExecutors.getInstance().networkIO().execute(() -> {
             URL url = NetworkUtils.generateUrlSortByPopular(apiKey);
@@ -58,6 +74,11 @@ public class MainRepository {
         });
     }
 
+    /**
+     * Retrieve list of top rated movies from remote data source
+     * @param movies the list that will be returned with the data
+     * @param apiKey application API_KEY
+     */
     public void loadTopRated(final MutableLiveData<List<Movie>> movies, String apiKey) {
         AppExecutors.getInstance().networkIO().execute(() -> {
             URL url = NetworkUtils.generateUrlSortByTopRated(apiKey);

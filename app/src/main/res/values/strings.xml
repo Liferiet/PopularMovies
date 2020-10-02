@@ -9,6 +9,7 @@
     <string name="sort_by_menu_label">Sort by:</string>
     <string name="top_rated_sort">rating</string>
     <string name="popular_sort">popularity</string>
+    <string name="favourite_sort">favourites</string>
     <string name="actionbar_spinner">ActionBar Spinner</string>
 
     <!--  Loading data error  -->
@@ -18,11 +19,15 @@
     <string name="original_title_label">Original title</string>
     <string name="rating_label">Rating</string>
     <string name="release_date_label">Release date</string>
+    <string name="trailers_label">Trailers</string>
+    <string name="reviews_label">Reviews</string>
+    <string name="author_label">Author: </string>
+    <string name="add_to_favourites_button">Add to\nfavourites</string>
+    <string name="remove_from_favourites_button">Remove from\nfavourites</string>
+    <string name="no_reviews">There aren\'t any reviews yet</string>
+    <string name="no_trailers">There aren\'t any trailers</string>
 
     <!-- Data not available in JSONObject  -->
     <string name="no_data">None</string>
-
-    <!--  API_KEY to movie database   ... until I know how to store it better-->
-    <string name="API_KEY"></string>
 
 </resources>

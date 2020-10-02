@@ -16,16 +16,27 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter that manages movie views in MainActivity
+ */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private int mNumberItems;
     private ArrayList<Movie> mMovieList;
     private OnListItemClickListener mOnListItemClickListener;
 
+    /**
+     * Constructor
+     * @param listener listener that handles onListItemClick events for each specific movie view
+     */
     public MovieAdapter(OnListItemClickListener listener) {
         mOnListItemClickListener = listener;
         this.mNumberItems = 0;
     }
 
+    /**
+     * Creates view holders for adapter
+     * Developer doesn't need to call this function
+     */
     @NonNull
     @Override
     public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,6 +50,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return new MovieViewHolder(binding);
     }
 
+    /**
+     * Interface for class that will handle click events on view holders
+     */
     interface OnListItemClickListener {
         void onListItemClick(Movie movie);
     }
@@ -63,6 +77,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return mMovieList;
     }
 
+    /**
+     * Class that holds the information for each particular element in data list
+     */
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final ListItemGridMovieBinding binding;

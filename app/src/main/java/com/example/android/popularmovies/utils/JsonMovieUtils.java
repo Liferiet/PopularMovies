@@ -12,11 +12,27 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+/**
+ * Utility class that parse json format to java classes
+ */
 public class JsonMovieUtils {
 
+    /**
+     * Base URL for retrieve poster image from MovieBD database in w185 size
+     */
     private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w185";
+    /**
+     * Base URL to create an URL to trailers
+     */
     private static final String YOUTUBE_URL = "https://youtu.be/";
 
+    /**
+     * Parse json from MovieDB to list of movies
+     * @param data data in json
+     * @param noDataFallback if no data in some field (ex. "none")
+     * @return list of movies
+     * @throws JSONException
+     */
     public static ArrayList<Movie> getMovieListFromJson (String data, String noDataFallback) throws JSONException {
         JSONObject fullJSONObject = new JSONObject(data);
 
@@ -54,6 +70,12 @@ public class JsonMovieUtils {
         return movieList;
     }
 
+    /**
+     * Parse json from MovieDB to list of trailers
+     * @param data data in json
+     * @return list of trailers
+     * @throws JSONException
+     */
     public static ArrayList<Trailer> getTrailersFromJson (String data) throws JSONException {
         JSONObject fullJSONObject = new JSONObject(data);
 
@@ -82,6 +104,12 @@ public class JsonMovieUtils {
         return trailersList;
     }
 
+    /**
+     * Parse json from MovieDB to list of reviews
+     * @param data data in json
+     * @return list of reviews
+     * @throws JSONException
+     */
     public static ArrayList<Review> getReviewFromJson (String data) throws JSONException {
         JSONObject fullJSONObject = new JSONObject(data);
 

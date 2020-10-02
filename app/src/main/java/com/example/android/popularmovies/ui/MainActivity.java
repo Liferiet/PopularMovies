@@ -24,6 +24,11 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+/**
+ * Activity launched during application startup
+ * Displays movie list for current selected option. Default option after application startup
+ * is "popular". Options can be changed in the drawer.
+ */
 public class MainActivity extends AppCompatActivity implements
         MovieAdapter.OnListItemClickListener {
 
@@ -34,6 +39,11 @@ public class MainActivity extends AppCompatActivity implements
 
     private MovieAdapter mAdapter;
 
+    /**
+     * Initializes respective ViewModel and observes the list of movies in it.
+     * Creates view with: adapter with list of movies, menu and drawer.
+     * @param savedInstanceState information saved before app was paused or rotated
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,12 +80,22 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * Inflates custom menu layout
+     * @param menu menu object
+     * @return true if menu created
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
+    /**
+     * Adds behavior to menu options
+     * @param item menu item
+     * @return true if option selected
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -99,7 +119,9 @@ public class MainActivity extends AppCompatActivity implements
         mBinding.errorMessageTv.setVisibility(View.VISIBLE);
     }
 
-    // Listener method for RecyclerView's adapter
+    /**
+     * Listener method that handles movie click in adapter
+     */
     @Override
     public void onListItemClick(Movie movie) {
         Intent intent = new Intent(this, DetailsActivity.class);
@@ -108,6 +130,10 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    /**
+     * Setup drawer and adds behavior to click events
+     * @param navigationView element in view with drawer
+     */
     private void setupDrawerContent(NavigationView navigationView) {
 
         navigationView.setNavigationItemSelectedListener(

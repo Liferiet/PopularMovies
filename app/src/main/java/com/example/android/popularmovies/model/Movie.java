@@ -15,6 +15,10 @@ import com.example.android.popularmovies.database.UriConverter;
 import java.util.ArrayList;
 import java.util.Formatter;
 
+/**
+ * Class for storing data about movies, implements Parcelable to pass movie object
+ * between activities in intents
+ */
 @Entity(tableName = "favourite_movie")
 @TypeConverters({UriConverter.class})
 public class Movie implements Parcelable {
